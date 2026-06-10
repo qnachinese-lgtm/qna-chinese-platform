@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QNA Chinese 學習者平台</title>
+<style>
+:root{
+  --primary:#3b7ce0; --primary-dark:#2a5fb8; --primary-light:#e8f1fd;
+  --ink:#1f2937; --muted:#64748b; --bg:#f4f8fc; --card:#ffffff;
+  --border:#dfe8f3; --ok:#2e9e5b; --warn:#d98a00; --bad:#d6453d;
+  --gold:#3b7ce0; --sky:#eaf3ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+/* 依語言切換字型：簡中改用簡體字型，避免以繁體字型渲染造成字形錯誤 */
+html[lang="zh-Hans"] body{font-family:"Noto Sans SC","Microsoft YaHei","PingFang SC",SimHei,sans-serif;}
+html[lang="en"] body,html[lang="vi"] body{font-family:"Segoe UI","Helvetica Neue",Arial,"Noto Sans",sans-serif;}
+header{background:linear-gradient(120deg,#4a8bee 0%,#2a5fb8 100%);color:#fff;padding:20px 30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;box-shadow:0 2px 12px rgba(42,95,184,.18);}
+header h1{font-size:1.4rem;letter-spacing:1px;}
+header h1 span{font-size:.85rem;opacity:.85;font-weight:normal;margin-left:10px;}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;}
+button{cursor:pointer;border:none;border-radius:8px;padding:9px 16px;font-size:.9rem;font-family:inherit;transition:.15s;}
+.btn-light{background:rgba(255,255,255,.92);color:var(--primary-dark);font-weight:bold;}
+.btn-light:hover{background:#fff;}
+.btn-ghost{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4);}
+.btn-ghost:hover{background:rgba(255,255,255,.28);}
+main{max-width:1180px;margin:0 auto;padding:24px 20px 60px;}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:24px;}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(30,60,120,.05);}
+.stat .ico{width:48px;height:48px;border-radius:13px;background:var(--sky);display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0;}
+.stat .num{font-size:1.65rem;font-weight:bold;color:var(--ink);line-height:1.1;}
+.stat .lbl{font-size:.8rem;color:var(--muted);margin-top:3px;}
+.stat.warn .ico{background:#fdf3e3;}
+.stat.warn .num{color:var(--warn);}
+.stat.bad .ico{background:#fdeceb;}
+.stat.bad .num{color:var(--bad);}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center;}
+.controls input[type=search],.controls select{padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:.92rem;font-family:inherit;background:#fff;}
+.controls input[type=search]{flex:1;min-width:220px;}
+#cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;position:relative;transition:.18s;box-shadow:0 1px 3px rgba(30,60,120,.05);}
+.card:hover{box-shadow:0 8px 24px rgba(42,95,184,.13);transform:translateY(-2px);border-color:#c5d9f5;}
+.card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.card .who{display:flex;gap:12px;align-items:center;min-width:0;}
+.avatar{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#6db3f2,#3b7ce0);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1.15rem;flex-shrink:0;}
+.card h3{font-size:1.1rem;}
+.card .flag{font-size:.8rem;color:var(--muted);margin-top:3px;}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.74rem;font-weight:bold;white-space:nowrap;}
+.badge.active{background:#e7f3e9;color:var(--ok);}
+.badge.paused{background:#fff4e0;color:var(--warn);}
+.badge.done{background:#eee;color:#777;}
+.rows{margin-top:12px;display:grid;gap:6px;font-size:.86rem;}
+.rows .r{display:flex;gap:8px;}
+.rows .k{color:var(--muted);min-width:88px;flex-shrink:0;}
+.rows .v{word-break:break-all;}
+.rows a{color:var(--primary);text-decoration:none;}
+.rows a:hover{text-decoration:underline;}
+.lessonbar{margin-top:12px;}
+.lessonbar .txt{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:4px;}
+.lessonbar .track{height:8px;background:#e3edf9;border-radius:6px;overflow:hidden;}
+.lessonbar .fill{height:100%;background:var(--primary);border-radius:6px;}
+.lessonbar.low .fill{background:var(--bad);}
+.lessonbar.low .txt b{color:var(--bad);}
+.unpaid-tag{margin-top:8px;font-size:.78rem;color:var(--bad);font-weight:bold;}
+.card .acts{margin-top:14px;display:flex;gap:8px;}
+.btn-sm{padding:6px 13px;font-size:.82rem;border-radius:7px;}
+.btn-edit{background:var(--primary-light);color:var(--primary-dark);font-weight:bold;}
+.btn-edit:hover{background:#d8e7fb;}
+.btn-del{background:#f1f5fa;color:var(--muted);}
+.btn-del:hover{background:#fdecea;color:var(--bad);}
+.empty{text-align:center;color:var(--muted);padding:70px 20px;font-size:.95rem;grid-column:1/-1;}
+.empty .big{font-size:2.4rem;margin-bottom:10px;}
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(20,40,80,.45);display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto;z-index:50;}
+.overlay.show{display:flex;}
+.modal{background:#fff;border-radius:16px;width:100%;max-width:680px;padding:26px 28px 30px;margin-bottom:40px;}
+.modal h2{font-size:1.2rem;color:var(--primary-dark);margin-bottom:4px;}
+.modal .sec{margin-top:18px;border-top:1px dashed var(--border);padding-top:14px;}
+.modal .sec h4{font-size:.84rem;color:var(--primary);letter-spacing:3px;margin-bottom:10px;border-left:3px solid var(--primary);padding-left:10px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.field{display:flex;flex-direction:column;gap:4px;}
+.field.full{grid-column:1/-1;}
+.field label{font-size:.8rem;color:var(--muted);}
+.field label .req{color:var(--bad);}
+.field input,.field select,.field textarea{padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:.9rem;font-family:inherit;background:#fff;}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--primary-light);border-color:var(--primary);}
+.field textarea{resize:vertical;min-height:70px;}
+.sub-list{display:grid;gap:8px;}
+.sub-row{display:grid;grid-template-columns:1fr 1.4fr 34px;gap:8px;}
+.sub-row.pay{grid-template-columns:.9fr .7fr 1.2fr 34px;}
+.sub-row input{padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:.85rem;font-family:inherit;}
+.btn-x{background:#f1f5fa;color:var(--muted);border-radius:8px;font-size:1rem;padding:0;}
+.btn-x:hover{background:#fdecea;color:var(--bad);}
+.btn-add-row{background:none;border:1px dashed var(--border);color:var(--muted);width:100%;padding:7px;font-size:.82rem;border-radius:8px;}
+.btn-add-row:hover{border-color:var(--primary);color:var(--primary);}
+.modal .foot{margin-top:24px;display:flex;justify-content:flex-end;gap:10px;}
+.btn-primary{background:var(--primary);color:#fff;font-weight:bold;padding:10px 26px;}
+.btn-primary:hover{background:var(--primary-dark);}
+.btn-cancel{background:#f1f5fa;color:var(--ink);}
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 22px;border-radius:30px;font-size:.88rem;opacity:0;pointer-events:none;transition:.3s;z-index:99;}
+.toast.show{opacity:1;}
+@media(max-width:640px){.grid2,.grid3{grid-template-columns:1fr;}.sub-row,.sub-row.pay{grid-template-columns:1fr 1fr 34px;}}
+/* ---------- login ---------- */
+#loginScreen{position:fixed;inset:0;background:#f5f7fa;display:flex;align-items:flex-start;justify-content:center;z-index:200;padding:46px 20px;overflow-y:auto;}
+.login-box{width:100%;max-width:430px;text-align:center;}
+.login-box .logo h2{font-family:Georgia,"Times New Roman",serif;font-size:2.05rem;color:#1a1a1a;margin-top:14px;}
+.login-box .sub1{font-size:1.18rem;font-weight:bold;color:#222;margin-top:10px;letter-spacing:3px;}
+.login-box .sub2{font-size:.9rem;color:#9aa3ad;margin-top:10px;letter-spacing:1px;}
+.login-tabs{display:flex;border:1px solid #d9dee5;border-radius:10px;overflow:hidden;margin:28px 0 20px;background:#f1f3f6;}
+.login-tabs button{flex:1;padding:13px;font-size:1rem;font-weight:bold;background:none;color:#555;border-radius:0;}
+.login-tabs button.on{background:#3b7ce0;color:#fff;}
+.lfield{position:relative;margin-bottom:14px;}
+.lfield input{width:100%;padding:15px 16px;border:1.5px solid #d9dee5;border-radius:10px;font-size:1rem;font-family:inherit;background:#fff;}
+.lfield input:focus{outline:none;border-color:#3b7ce0;}
+.lfield.pw input{padding-right:64px;}
+.show-pw{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;color:#9aa3ad;font-size:.85rem;padding:6px 8px;}
+.show-pw:hover{color:#3b7ce0;}
+.btn-login{width:100%;background:#3b7ce0;color:#fff;font-size:1.1rem;font-weight:bold;padding:15px;border-radius:10px;margin-top:6px;box-shadow:0 4px 12px rgba(59,124,224,.35);}
+.btn-login:hover{background:#2f6bc9;}
+.login-err{color:#c0392b;font-size:.84rem;min-height:1.1em;margin:2px 0 6px;text-align:left;}
+.login-links{margin-top:18px;font-size:.92rem;}
+.login-links a{color:#3b7ce0;text-decoration:underline;}
+.login-hint{font-size:.78rem;color:#9aa3ad;margin-top:14px;}
+.admin-link{margin-top:28px;}
+.admin-link a{color:#9aa3ad;font-size:.9rem;text-decoration:none;}
+.admin-link a:hover{color:#3b7ce0;}
+/* ---------- language switch ---------- */
+.lang-row{display:flex;justify-content:center;gap:6px;margin-bottom:20px;}
+.lang-row button{background:#fff;border:1px solid #d9dee5;color:#555;border-radius:20px;padding:6px 15px;font-size:.83rem;}
+.lang-row button.on{background:#3b7ce0;color:#fff;border-color:#3b7ce0;}
+.lang-sel{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:#fff;font-family:inherit;font-size:.85rem;cursor:pointer;}
+.lang-sel option{color:var(--ink);background:#fff;}
+body.locked header,body.locked main{display:none;}
+/* ---------- student view ---------- */
+#studentMain{display:none;max-width:760px;}
+body.student-mode #studentMain{display:block;}
+body.student-mode main#teacherMain{display:none !important;}
+.sv-hello{background:linear-gradient(120deg,var(--sky) 0%,#ffffff 70%);border:1px solid var(--border);border-radius:16px;padding:24px 26px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;box-shadow:0 1px 3px rgba(30,60,120,.05);}
+.sv-hello h2{font-size:1.3rem;color:var(--primary-dark);}
+.sv-hello p{font-size:.85rem;color:var(--muted);margin-top:4px;}
+.sv-sec{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 24px;margin-bottom:16px;box-shadow:0 1px 3px rgba(30,60,120,.05);}
+.sv-sec h3{font-size:.88rem;color:var(--primary);letter-spacing:3px;margin-bottom:12px;font-weight:bold;border-left:3px solid var(--primary);padding-left:10px;}
+.pay-table{width:100%;border-collapse:collapse;font-size:.86rem;}
+.pay-table th,.pay-table td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--border);}
+.pay-table th{color:var(--muted);font-weight:normal;font-size:.78rem;}
+body.student-mode .toolbar .teacher-only{display:none;}
+.setup-warn{display:none;background:#fff4e0;color:#9a6b00;border:1px solid #f0d9a8;border-radius:10px;padding:12px 14px;font-size:.85rem;margin-bottom:16px;text-align:left;line-height:1.6;}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+</head>
+<body class="locked">
+
+<!-- 登入畫面 -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="logo">
+      <svg width="58" height="48" viewBox="0 0 58 48" aria-hidden="true">
+        <rect x="8" y="8" width="13" height="32" rx="2.5" fill="#4cd964" transform="rotate(-10 14 24)"/>
+        <rect x="23" y="4" width="14" height="36" rx="2.5" fill="#2f9bf4"/>
+        <rect x="39" y="8" width="13" height="32" rx="2.5" fill="#e0467e" transform="rotate(10 45 24)"/>
+      </svg>
+      <h2>QNA Chinese</h2>
+      <p class="sub1" data-i18n="sub1">華語學習者平台</p>
+      <p class="sub2" data-i18n="sub2">課程管理｜個人學習進度追蹤</p>
+    </div>
+
+    <div class="setup-warn" id="setupWarn">⚠️ 尚未連接雲端資料庫。請依「雲端版設定指南」把 Firebase 設定貼入本檔案的 FIREBASE_CONFIG 區塊後再使用。</div>
+
+    <div class="lang-row">
+      <button id="lg-zh-Hant" onclick="setLang('zh-Hant')">繁中</button>
+      <button id="lg-zh-Hans" onclick="setLang('zh-Hans')">简中</button>
+      <button id="lg-en" onclick="setLang('en')">English</button>
+      <button id="lg-vi" onclick="setLang('vi')">Tiếng Việt</button>
+    </div>
+
+    <div class="login-tabs" id="loginTabs">
+      <button id="tabLogin" class="on" onclick="showLoginView('login')" data-i18n="tabLogin">登入</button>
+      <button id="tabSignup" onclick="showLoginView('signup')" data-i18n="tabSignup">新建帳號</button>
+    </div>
+
+    <!-- 學習者登入 -->
+    <div id="vLogin">
+      <div class="lfield"><input id="lStuName" data-i18n-ph="phName" placeholder="學習者名稱"></div>
+      <div class="lfield pw"><input type="password" id="lStuPw" data-i18n-ph="phPw" placeholder="密碼" onkeydown="if(event.key==='Enter')studentLogin()"><button class="show-pw" onclick="togglePw('lStuPw',this)">顯示</button></div>
+      <div class="login-err" id="errS"></div>
+      <button class="btn-login" onclick="studentLogin()" data-i18n="btnLogin">登入 →</button>
+      <div class="login-links"><a href="#" onclick="forgotPw();return false;" data-i18n="forgot">忘記密碼？</a></div>
+    </div>
+
+    <!-- 新建帳號 -->
+    <div id="vSignup" style="display:none">
+      <div class="lfield"><input id="rName" data-i18n-ph="phName" placeholder="學習者名稱"></div>
+      <div class="lfield"><input id="rEmail" type="email" data-i18n-ph="phEmail" placeholder="Email 信箱"></div>
+      <div class="lfield pw"><input type="password" id="rPw" data-i18n-ph="phNewPw" placeholder="設定密碼（至少 4 個字元）" onkeydown="if(event.key==='Enter')registerStudent()"><button class="show-pw" onclick="togglePw('rPw',this)">顯示</button></div>
+      <div class="login-err" id="errR"></div>
+      <button class="btn-login" onclick="registerStudent()" data-i18n="btnSignup">建立帳號 →</button>
+      <div class="login-hint" data-i18n="signupHint">建立後老師會為你安排課程內容。</div>
+    </div>
+
+    <!-- 老師登入 -->
+    <div id="vAdmin" style="display:none">
+      <div class="lfield pw"><input type="password" id="lAdminPw" data-i18n-ph="phAdminPw" placeholder="老師管理密碼" onkeydown="if(event.key==='Enter')teacherLogin()"><button class="show-pw" onclick="togglePw('lAdminPw',this)">顯示</button></div>
+      <div class="login-err" id="errT"></div>
+      <button class="btn-login" onclick="teacherLogin()" data-i18n="btnTeacher">老師登入 →</button>
+      <div class="login-links"><a href="#" onclick="showLoginView('login');return false;" data-i18n="backToLogin">← 返回學習者登入</a></div>
+    </div>
+
+    <div class="admin-link" id="adminLink"><a href="#" onclick="showLoginView('admin');return false;" data-i18n="adminLink">教師登入</a></div>
+  </div>
+</div>
+
+<header>
+  <h1>QNA Chinese<span data-i18n="appTitle">學習者管理</span></h1>
+  <div class="toolbar">
+    <button class="btn-light teacher-only" onclick="openModal()" data-i18n="addStudent">＋ 新增學習者</button>
+    <button class="btn-ghost teacher-only" onclick="exportJSON()" data-i18n="exportBackup">匯出備份</button>
+    <button class="btn-ghost teacher-only" onclick="document.getElementById('importFile').click()" data-i18n="importBackup">匯入備份</button>
+    <button class="btn-ghost teacher-only" onclick="exportCSV()" data-i18n="exportCsv">匯出 CSV</button>
+    <button class="btn-ghost teacher-only" onclick="changeAdminPw()" data-i18n="adminPwBtn">管理密碼</button>
+    <button class="btn-ghost" onclick="logout()" data-i18n="logoutBtn">登出</button>
+    <select id="langSel" class="lang-sel" onchange="setLang(this.value)">
+      <option value="zh-Hant">繁體中文</option>
+      <option value="zh-Hans">简体中文</option>
+      <option value="en">English</option>
+      <option value="vi">Tiếng Việt</option>
+    </select>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
+  </div>
+</header>
+
+<main id="studentMain"></main>
+
+<main id="teacherMain">
+  <div class="stats">
+    <div class="stat"><div class="ico">👥</div><div><div class="num" id="stTotal">0</div><div class="lbl" data-i18n="stTotal">學習者總數</div></div></div>
+    <div class="stat"><div class="ico">📖</div><div><div class="num" id="stActive">0</div><div class="lbl" data-i18n="stActive">進行中</div></div></div>
+    <div class="stat warn"><div class="ico">⏳</div><div><div class="num" id="stLow">0</div><div class="lbl" data-i18n="stLow">剩餘堂數 ≤ 2</div></div></div>
+    <div class="stat bad"><div class="ico">💰</div><div><div class="num" id="stUnpaid">0</div><div class="lbl" data-i18n="stUnpaid">待繳費</div></div></div>
+  </div>
+
+  <div class="controls">
+    <input type="search" id="q" data-i18n-ph="searchPh" placeholder="搜尋姓名、國籍、信箱、備註…" oninput="render()">
+    <select id="fStatus" onchange="render()">
+      <option value="" data-i18n="allStatus">全部狀態</option>
+      <option value="進行中" data-i18n="st_active">進行中</option>
+      <option value="暫停" data-i18n="st_paused">暫停</option>
+      <option value="已結束" data-i18n="st_done">已結束</option>
+    </select>
+    <select id="fSort" onchange="render()">
+      <option value="new" data-i18n="sortNew">最新加入</option>
+      <option value="name" data-i18n="sortName">姓名排序</option>
+      <option value="low" data-i18n="sortLow">剩餘堂數少→多</option>
+    </select>
+  </div>
+
+  <div id="cards"></div>
+</main>
+
+<!-- 新增 / 編輯 -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2 id="mTitle">新增學習者</h2>
+
+    <div class="sec"><h4 data-i18n="secBasic">基 本 資 料</h4>
+      <div class="grid2">
+        <div class="field"><label><span data-i18n="name">姓名</span> <span class="req">*</span></label><input id="fName"></div>
+        <div class="field"><label data-i18n="nationality">國籍</label><input id="fNation" list="dlNation">
+          <datalist id="dlNation"><option>越南</option><option>日本</option><option>美國</option><option>臺灣</option></datalist></div>
+        <div class="field"><label data-i18n="gender">性別</label><select id="fGender"><option value="">—</option><option value="女" data-i18n="female">女</option><option value="男" data-i18n="male">男</option><option value="其他" data-i18n="other">其他</option></select></div>
+        <div class="field"><label data-i18n="email">信箱</label><input id="fEmail" type="email"></div>
+        <div class="field"><label data-i18n="stuPw">學生登入密碼（學生用名稱＋此密碼登入）</label><input id="fPw"></div>
+        <div class="field full"><label data-i18n="googleLink">Google 連結（雲端硬碟 / Meet / 文件）</label><input id="fGoogle" placeholder="https://…"></div>
+      </div>
+    </div>
+
+    <div class="sec"><h4 data-i18n="secLang">語 言 設 定</h4>
+      <div class="grid2">
+        <div class="field"><label data-i18n="levelLabel">語言門檻（目前中文程度）</label><input id="fLevel" list="dlLevel">
+          <datalist id="dlLevel"><option>零基礎</option><option>TOCFL 準備級</option><option>TOCFL A1</option><option>TOCFL A2</option><option>TOCFL B1</option><option>TOCFL B2</option><option>TOCFL C1</option><option>HSK 1</option><option>HSK 2</option><option>HSK 3</option><option>HSK 4</option><option>HSK 5</option><option>HSK 6</option></datalist></div>
+        <div class="field"><label data-i18n="outputLabel">希望達到的中文程度</label><input id="fOutput" list="dlOut">
+          <datalist id="dlOut"><option>日常會話流利</option><option>TOCFL A1</option><option>TOCFL A2</option><option>TOCFL B1</option><option>TOCFL B2</option><option>TOCFL C1</option><option>HSK 3</option><option>HSK 4</option><option>HSK 5</option><option>HSK 6</option><option>商務中文</option><option>通過檢定考試</option></datalist></div>
+      </div>
+    </div>
+
+    <div class="sec"><h4 data-i18n="secCourse">課 程 安 排</h4>
+      <div class="grid3">
+        <div class="field"><label data-i18n="totalLessons">總堂數</label><input id="fTotal" type="number" min="0"></div>
+        <div class="field"><label data-i18n="usedLessons">已上堂數</label><input id="fUsed" type="number" min="0"></div>
+        <div class="field"><label data-i18n="statusLabel">狀態</label><select id="fStat"><option value="進行中" data-i18n="st_active">進行中</option><option value="暫停" data-i18n="st_paused">暫停</option><option value="已結束" data-i18n="st_done">已結束</option></select></div>
+        <div class="field"><label data-i18n="scheduleLabel">上課時間</label><input id="fSchedule" placeholder="例：每週三 20:00"></div>
+        <div class="field"><label data-i18n="tzLabel">學生時區</label><input id="fTz" list="dlTz" placeholder="例：UTC+9 日本">
+          <datalist id="dlTz"><option>UTC+7 越南</option><option>UTC+8 臺灣</option><option>UTC+9 日本</option><option>UTC-5 紐約</option></datalist></div>
+      </div>
+    </div>
+
+    <div class="sec"><h4 data-i18n="secFiles">上 課 資 料 檔 案</h4>
+      <div class="sub-list" id="fileList"></div>
+      <button class="btn-add-row" onclick="addFileRow()" style="margin-top:8px" data-i18n="addFileRow">＋ 新增資料連結</button>
+    </div>
+
+    <div class="sec"><h4 data-i18n="secPay">繳 費 紀 錄</h4>
+      <div class="sub-list" id="payList"></div>
+      <button class="btn-add-row" onclick="addPayRow()" style="margin-top:8px" data-i18n="addPayRow">＋ 新增繳費紀錄</button>
+      <div class="field" style="margin-top:10px"><label data-i18n="paidLabel">繳費狀態</label>
+        <select id="fPaid"><option value="已繳清" data-i18n="paid_full">已繳清</option><option value="待繳費" data-i18n="paid_pending">待繳費</option><option value="部分繳費" data-i18n="paid_part">部分繳費</option></select></div>
+    </div>
+
+    <div class="sec"><h4 data-i18n="secNotes">備 註</h4>
+      <div class="field full"><textarea id="fNotes" data-i18n-ph="notesPh" placeholder="學習目標、特殊需求、教材偏好…"></textarea></div>
+    </div>
+
+    <div class="foot">
+      <button class="btn-cancel" onclick="closeModal()" data-i18n="cancel">取消</button>
+      <button class="btn-primary" onclick="save()" data-i18n="save">儲存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   ★★★ Firebase 設定 ★★★
+   請依「雲端版設定指南」從 Firebase 控制台複製 firebaseConfig，
+   把欄位貼到下方大括號內。範例格式：
+   const FIREBASE_CONFIG={
+     apiKey:"AIzaSyXXXXXXXX",
+     authDomain:"qna-chinese.firebaseapp.com",
+     projectId:"qna-chinese",
+     storageBucket:"qna-chinese.appspot.com",
+     messagingSenderId:"123456789",
+     appId:"1:123456789:web:abcdef"
+   };
+   ============================================================ */
+const FIREBASE_CONFIG={
+  apiKey:"AIzaSyCSgZ9DmLuKIqqbxrVgAcUfy-QJFhzjjp8",
+  authDomain:"qna-chinese.firebaseapp.com",
+  projectId:"qna-chinese",
+  storageBucket:"qna-chinese.firebasestorage.app",
+  messagingSenderId:"645044163415",
+  appId:"1:645044163415:web:c33d1a22422de3083b6412"
+};
+
+let students=[], editId=null, db=null, ADMINPW='qna1234', cloudLoaded=false;
+function cloudReady(){return typeof firebase!=='undefined'&&FIREBASE_CONFIG&&!!FIREBASE_CONFIG.apiKey;}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+
+/* ---------- i18n ---------- */
+const I18N={
+'zh-Hant':{
+ appTitle:'學習者管理',addStudent:'＋ 新增學習者',exportBackup:'匯出備份',importBackup:'匯入備份',exportCsv:'匯出 CSV',adminPwBtn:'管理密碼',logoutBtn:'登出',
+ stTotal:'學習者總數',stActive:'進行中',stLow:'剩餘堂數 ≤ 2',stUnpaid:'待繳費',
+ searchPh:'搜尋姓名、國籍、信箱、備註…',allStatus:'全部狀態',st_active:'進行中',st_paused:'暫停',st_done:'已結束',
+ sortNew:'最新加入',sortName:'姓名排序',sortLow:'剩餘堂數少→多',
+ email:'信箱',level:'語言門檻',outputLang:'目標程度',schedule:'上課時間',openLink:'開啟連結',materials:'上課資料',notes:'備註',
+ lessonsProg:'已上 {u} / {t} 堂',remainLessons:'剩 {r} 堂',edit:'編輯',del:'刪除',
+ paid_full:'已繳清',paid_pending:'待繳費',paid_part:'部分繳費',
+ emptyNone:'沒有符合條件的學習者',emptyStart:'還沒有學習者，點右上角「＋ 新增學習者」開始建立！',
+ addTitle:'新增學習者',editTitle:'編輯學習者：{n}',
+ secBasic:'基 本 資 料',secLang:'語 言 設 定',secCourse:'課 程 安 排',secFiles:'上 課 資 料 檔 案',secPay:'繳 費 紀 錄',secNotes:'備 註',
+ name:'姓名',nationality:'國籍',gender:'性別',female:'女',male:'男',other:'其他',
+ stuPw:'學生登入密碼（學生用名稱＋此密碼登入）',googleLink:'Google 連結（雲端硬碟 / Meet / 文件）',
+ levelLabel:'語言門檻（目前中文程度）',outputLabel:'希望達到的中文程度',
+ totalLessons:'總堂數',usedLessons:'已上堂數',statusLabel:'狀態',scheduleLabel:'上課時間',tzLabel:'學生時區',paidLabel:'繳費狀態',
+ fileName:'資料名稱',fileUrl:'連結 https://…',addFileRow:'＋ 新增資料連結',amount:'金額',payNote:'說明（例：10堂方案）',addPayRow:'＋ 新增繳費紀錄',
+ notesPh:'學習目標、特殊需求、教材偏好…',cancel:'取消',save:'儲存',
+ needName:'請填寫姓名',updated:'已更新 {n}',added:'已新增 {n}',deleted:'已刪除 {n}',confirmDel:'確定要刪除「{n}」嗎？此動作無法復原。',
+ exported:'已匯出備份',importMerge:'匯入會與現有 {c} 位學習者合併（同 ID 覆蓋）。繼續？',imported:'已匯入 {c} 筆資料',importErr:'檔案格式錯誤，請選擇本系統匯出的 JSON 備份',csvExported:'已匯出 CSV',
+ pwPromptOld:'請輸入目前的管理密碼：',pwPromptNew:'請輸入新密碼（至少 4 個字元）：',pwWrong:'密碼錯誤',pwTooShort:'未變更：新密碼太短',pwUpdated:'管理密碼已更新',
+ sub1:'華語學習者平台',sub2:'課程管理｜個人學習進度追蹤',tabLogin:'登入',tabSignup:'新建帳號',
+ phName:'學習者名稱',phPw:'密碼',phEmail:'Email 信箱',phNewPw:'設定密碼（至少 4 個字元）',show:'顯示',hide:'隱藏',
+ btnLogin:'登入 →',forgot:'忘記密碼？',btnSignup:'建立帳號 →',signupHint:'建立後老師會為你安排課程內容。',
+ phAdminPw:'老師管理密碼',btnTeacher:'老師登入 →',adminHint:'',backToLogin:'← 返回學習者登入',adminLink:'教師登入',
+ errName:'請輸入學習者名稱',errNotFound:'找不到這個名稱，請確認或點「新建帳號」',errNoPw:'尚未設定密碼，請聯絡老師',errWrongPw:'密碼錯誤',
+ errEmail:'請輸入有效的 Email 信箱',errPwShort:'密碼至少需要 4 個字元',errDup:'此名稱或信箱已有帳號，請直接登入',
+ forgotMsg:'請聯絡老師重設密碼：\nqnachinese@gmail.com',
+ loadingData:'資料載入中，請稍候再試',noCloud:'尚未連接雲端資料庫，請先完成 Firebase 設定',
+ welcome:'{n}，歡迎回來！',svProgress:'課 程 進 度',svInfo:'上 課 資 訊',svNoData:'尚無資料',svMaterials:'上 課 資 料',svNoMaterials:'老師尚未提供上課資料',
+ svPay:'繳 費 紀 錄',payDate:'日期',payAmount:'金額',payNoteTh:'說明',svNoPay:'尚無繳費紀錄',outputPrefix:'目標程度：',regNote:'學生自行註冊'
+},
+'zh-Hans':{
+ appTitle:'学习者管理',addStudent:'＋ 新增学习者',exportBackup:'导出备份',importBackup:'导入备份',exportCsv:'导出 CSV',adminPwBtn:'管理密码',logoutBtn:'退出登录',
+ stTotal:'学习者总数',stActive:'进行中',stLow:'剩余课时 ≤ 2',stUnpaid:'待缴费',
+ searchPh:'搜索姓名、国籍、邮箱、备注…',allStatus:'全部状态',st_active:'进行中',st_paused:'暂停',st_done:'已结束',
+ sortNew:'最新加入',sortName:'姓名排序',sortLow:'剩余课时少→多',
+ email:'邮箱',level:'语言门槛',outputLang:'目标程度',schedule:'上课时间',openLink:'打开链接',materials:'上课资料',notes:'备注',
+ lessonsProg:'已上 {u} / {t} 节',remainLessons:'剩 {r} 节',edit:'编辑',del:'删除',
+ paid_full:'已缴清',paid_pending:'待缴费',paid_part:'部分缴费',
+ emptyNone:'没有符合条件的学习者',emptyStart:'还没有学习者，点右上角「＋ 新增学习者」开始建立！',
+ addTitle:'新增学习者',editTitle:'编辑学习者：{n}',
+ secBasic:'基 本 资 料',secLang:'语 言 设 置',secCourse:'课 程 安 排',secFiles:'上 课 资 料 文 件',secPay:'缴 费 记 录',secNotes:'备 注',
+ name:'姓名',nationality:'国籍',gender:'性别',female:'女',male:'男',other:'其他',
+ stuPw:'学生登录密码（学生用名称＋此密码登录）',googleLink:'Google 链接（云端硬盘 / Meet / 文档）',
+ levelLabel:'语言门槛（目前中文程度）',outputLabel:'希望达到的中文程度',
+ totalLessons:'总课时',usedLessons:'已上课时',statusLabel:'状态',scheduleLabel:'上课时间',tzLabel:'学生时区',paidLabel:'缴费状态',
+ fileName:'资料名称',fileUrl:'链接 https://…',addFileRow:'＋ 新增资料链接',amount:'金额',payNote:'说明（例：10节方案）',addPayRow:'＋ 新增缴费记录',
+ notesPh:'学习目标、特殊需求、教材偏好…',cancel:'取消',save:'保存',
+ needName:'请填写姓名',updated:'已更新 {n}',added:'已新增 {n}',deleted:'已删除 {n}',confirmDel:'确定要删除「{n}」吗？此操作无法恢复。',
+ exported:'已导出备份',importMerge:'导入会与现有 {c} 位学习者合并（同 ID 覆盖）。继续？',imported:'已导入 {c} 条数据',importErr:'文件格式错误，请选择本系统导出的 JSON 备份',csvExported:'已导出 CSV',
+ pwPromptOld:'请输入当前的管理密码：',pwPromptNew:'请输入新密码（至少 4 个字符）：',pwWrong:'密码错误',pwTooShort:'未更改：新密码太短',pwUpdated:'管理密码已更新',
+ sub1:'华语学习者平台',sub2:'课程管理｜个人学习进度追踪',tabLogin:'登录',tabSignup:'新建账号',
+ phName:'学习者名称',phPw:'密码',phEmail:'Email 邮箱',phNewPw:'设置密码（至少 4 个字符）',show:'显示',hide:'隐藏',
+ btnLogin:'登录 →',forgot:'忘记密码？',btnSignup:'创建账号 →',signupHint:'创建后老师会为你安排课程内容。',
+ phAdminPw:'老师管理密码',btnTeacher:'老师登录 →',adminHint:'',backToLogin:'← 返回学习者登录',adminLink:'教师登录',
+ errName:'请输入学习者名称',errNotFound:'找不到这个名称，请确认或点「新建账号」',errNoPw:'尚未设置密码，请联系老师',errWrongPw:'密码错误',
+ errEmail:'请输入有效的 Email 邮箱',errPwShort:'密码至少需要 4 个字符',errDup:'此名称或邮箱已有账号，请直接登录',
+ forgotMsg:'请联系老师重置密码：\nqnachinese@gmail.com',
+ loadingData:'数据加载中，请稍候再试',noCloud:'尚未连接云端数据库，请先完成 Firebase 设置',
+ welcome:'{n}，欢迎回来！',svProgress:'课 程 进 度',svInfo:'上 课 信 息',svNoData:'暂无数据',svMaterials:'上 课 资 料',svNoMaterials:'老师尚未提供上课资料',
+ svPay:'缴 费 记 录',payDate:'日期',payAmount:'金额',payNoteTh:'说明',svNoPay:'暂无缴费记录',outputPrefix:'目标程度：',regNote:'学生自行注册'
+},
+'en':{
+ appTitle:'Learner Management',addStudent:'＋ Add Learner',exportBackup:'Export Backup',importBackup:'Import Backup',exportCsv:'Export CSV',adminPwBtn:'Admin Password',logoutBtn:'Log out',
+ stTotal:'Total Learners',stActive:'Active',stLow:'≤ 2 Lessons Left',stUnpaid:'Unpaid',
+ searchPh:'Search name, nationality, email, notes…',allStatus:'All statuses',st_active:'Active',st_paused:'Paused',st_done:'Finished',
+ sortNew:'Newest first',sortName:'By name',sortLow:'Fewest lessons left',
+ email:'Email',level:'Current level',outputLang:'Target level',schedule:'Class time',openLink:'Open link',materials:'Materials',notes:'Notes',
+ lessonsProg:'{u} / {t} lessons done',remainLessons:'{r} left',edit:'Edit',del:'Delete',
+ paid_full:'Paid',paid_pending:'Unpaid',paid_part:'Partially paid',
+ emptyNone:'No learners match your filters',emptyStart:'No learners yet — click “＋ Add Learner” to get started!',
+ addTitle:'Add Learner',editTitle:'Edit Learner: {n}',
+ secBasic:'BASIC INFO',secLang:'LANGUAGE',secCourse:'COURSE',secFiles:'CLASS MATERIALS',secPay:'PAYMENTS',secNotes:'NOTES',
+ name:'Name',nationality:'Nationality',gender:'Gender',female:'Female',male:'Male',other:'Other',
+ stuPw:'Student login password (login with name + this password)',googleLink:'Google link (Drive / Meet / Docs)',
+ levelLabel:'Current Chinese level',outputLabel:'Target Chinese level (goal)',
+ totalLessons:'Total lessons',usedLessons:'Lessons taken',statusLabel:'Status',scheduleLabel:'Class time',tzLabel:'Student time zone',paidLabel:'Payment status',
+ fileName:'Material name',fileUrl:'Link https://…',addFileRow:'＋ Add material link',amount:'Amount',payNote:'Note (e.g. 10-lesson pack)',addPayRow:'＋ Add payment record',
+ notesPh:'Learning goals, special needs, material preferences…',cancel:'Cancel',save:'Save',
+ needName:'Please enter a name',updated:'Updated {n}',added:'Added {n}',deleted:'Deleted {n}',confirmDel:'Delete “{n}”? This cannot be undone.',
+ exported:'Backup exported',importMerge:'Import will merge with {c} existing learners (same ID overwrites). Continue?',imported:'Imported {c} records',importErr:'Invalid file — please choose a JSON backup exported from this system',csvExported:'CSV exported',
+ pwPromptOld:'Enter the current admin password:',pwPromptNew:'Enter a new password (at least 4 characters):',pwWrong:'Wrong password',pwTooShort:'Not changed: new password too short',pwUpdated:'Admin password updated',
+ sub1:'Chinese Learner Platform',sub2:'Course management | Personal progress tracking',tabLogin:'Log in',tabSignup:'Sign up',
+ phName:'Learner name',phPw:'Password',phEmail:'Email',phNewPw:'Set a password (at least 4 characters)',show:'Show',hide:'Hide',
+ btnLogin:'Log in →',forgot:'Forgot password?',btnSignup:'Create account →',signupHint:'After signing up, your teacher will set up your course.',
+ phAdminPw:'Teacher admin password',btnTeacher:'Teacher login →',adminHint:'',backToLogin:'← Back to learner login',adminLink:'Teacher Login',
+ errName:'Please enter your learner name',errNotFound:'Name not found — check it or tap “Sign up”',errNoPw:'No password set yet — please contact your teacher',errWrongPw:'Wrong password',
+ errEmail:'Please enter a valid email',errPwShort:'Password needs at least 4 characters',errDup:'This name or email already has an account — please log in',
+ forgotMsg:'Please contact your teacher to reset your password:\nqnachinese@gmail.com',
+ loadingData:'Loading data — please try again in a moment',noCloud:'Cloud database not connected — please finish the Firebase setup first',
+ welcome:'Welcome back, {n}!',svProgress:'COURSE PROGRESS',svInfo:'CLASS INFO',svNoData:'No data yet',svMaterials:'MATERIALS',svNoMaterials:'No materials from your teacher yet',
+ svPay:'PAYMENTS',payDate:'Date',payAmount:'Amount',payNoteTh:'Note',svNoPay:'No payment records yet',outputPrefix:'Target level: ',regNote:'Self-registered'
+},
+'vi':{
+ appTitle:'Quản lý học viên',addStudent:'＋ Thêm học viên',exportBackup:'Xuất bản sao lưu',importBackup:'Nhập bản sao lưu',exportCsv:'Xuất CSV',adminPwBtn:'Mật khẩu quản trị',logoutBtn:'Đăng xuất',
+ stTotal:'Tổng số học viên',stActive:'Đang học',stLow:'Còn ≤ 2 buổi',stUnpaid:'Chưa thanh toán',
+ searchPh:'Tìm tên, quốc tịch, email, ghi chú…',allStatus:'Tất cả trạng thái',st_active:'Đang học',st_paused:'Tạm dừng',st_done:'Đã kết thúc',
+ sortNew:'Mới nhất',sortName:'Theo tên',sortLow:'Số buổi còn lại ít → nhiều',
+ email:'Email',level:'Trình độ hiện tại',outputLang:'Mục tiêu trình độ',schedule:'Lịch học',openLink:'Mở liên kết',materials:'Tài liệu',notes:'Ghi chú',
+ lessonsProg:'Đã học {u} / {t} buổi',remainLessons:'Còn {r} buổi',edit:'Sửa',del:'Xóa',
+ paid_full:'Đã thanh toán',paid_pending:'Chưa thanh toán',paid_part:'Thanh toán một phần',
+ emptyNone:'Không tìm thấy học viên phù hợp',emptyStart:'Chưa có học viên nào — nhấn “＋ Thêm học viên” để bắt đầu!',
+ addTitle:'Thêm học viên',editTitle:'Chỉnh sửa: {n}',
+ secBasic:'THÔNG TIN CƠ BẢN',secLang:'NGÔN NGỮ',secCourse:'KHÓA HỌC',secFiles:'TÀI LIỆU HỌC TẬP',secPay:'THANH TOÁN',secNotes:'GHI CHÚ',
+ name:'Họ tên',nationality:'Quốc tịch',gender:'Giới tính',female:'Nữ',male:'Nam',other:'Khác',
+ stuPw:'Mật khẩu đăng nhập của học viên (đăng nhập bằng tên + mật khẩu này)',googleLink:'Liên kết Google (Drive / Meet / Docs)',
+ levelLabel:'Trình độ tiếng Trung hiện tại',outputLabel:'Trình độ tiếng Trung mong muốn đạt được',
+ totalLessons:'Tổng số buổi',usedLessons:'Số buổi đã học',statusLabel:'Trạng thái',scheduleLabel:'Lịch học',tzLabel:'Múi giờ của học viên',paidLabel:'Trạng thái thanh toán',
+ fileName:'Tên tài liệu',fileUrl:'Liên kết https://…',addFileRow:'＋ Thêm liên kết tài liệu',amount:'Số tiền',payNote:'Ghi chú (VD: gói 10 buổi)',addPayRow:'＋ Thêm bản ghi thanh toán',
+ notesPh:'Mục tiêu học tập, nhu cầu đặc biệt, giáo trình ưa thích…',cancel:'Hủy',save:'Lưu',
+ needName:'Vui lòng nhập họ tên',updated:'Đã cập nhật {n}',added:'Đã thêm {n}',deleted:'Đã xóa {n}',confirmDel:'Bạn có chắc muốn xóa “{n}”? Thao tác này không thể hoàn tác.',
+ exported:'Đã xuất bản sao lưu',importMerge:'Dữ liệu nhập sẽ gộp với {c} học viên hiện có (trùng ID sẽ ghi đè). Tiếp tục?',imported:'Đã nhập {c} bản ghi',importErr:'Tệp không hợp lệ — vui lòng chọn bản sao lưu JSON xuất từ hệ thống này',csvExported:'Đã xuất CSV',
+ pwPromptOld:'Nhập mật khẩu quản trị hiện tại:',pwPromptNew:'Nhập mật khẩu mới (ít nhất 4 ký tự):',pwWrong:'Sai mật khẩu',pwTooShort:'Chưa thay đổi: mật khẩu mới quá ngắn',pwUpdated:'Đã cập nhật mật khẩu quản trị',
+ sub1:'Nền tảng học viên tiếng Trung',sub2:'Quản lý khóa học｜Theo dõi tiến độ học tập',tabLogin:'Đăng nhập',tabSignup:'Tạo tài khoản',
+ phName:'Tên học viên',phPw:'Mật khẩu',phEmail:'Email',phNewPw:'Đặt mật khẩu (ít nhất 4 ký tự)',show:'Hiện',hide:'Ẩn',
+ btnLogin:'Đăng nhập →',forgot:'Quên mật khẩu?',btnSignup:'Tạo tài khoản →',signupHint:'Sau khi tạo tài khoản, giáo viên sẽ sắp xếp khóa học cho bạn.',
+ phAdminPw:'Mật khẩu quản trị của giáo viên',btnTeacher:'Giáo viên đăng nhập →',adminHint:'',backToLogin:'← Quay lại đăng nhập học viên',adminLink:'Giáo viên đăng nhập',
+ errName:'Vui lòng nhập tên học viên',errNotFound:'Không tìm thấy tên này — kiểm tra lại hoặc nhấn “Tạo tài khoản”',errNoPw:'Chưa đặt mật khẩu — vui lòng liên hệ giáo viên',errWrongPw:'Sai mật khẩu',
+ errEmail:'Vui lòng nhập email hợp lệ',errPwShort:'Mật khẩu cần ít nhất 4 ký tự',errDup:'Tên hoặc email này đã có tài khoản — vui lòng đăng nhập',
+ forgotMsg:'Vui lòng liên hệ giáo viên để đặt lại mật khẩu:\nqnachinese@gmail.com',
+ loadingData:'Đang tải dữ liệu — vui lòng thử lại sau giây lát',noCloud:'Chưa kết nối cơ sở dữ liệu đám mây — vui lòng hoàn tất cài đặt Firebase',
+ welcome:'{n}, chào mừng trở lại!',svProgress:'TIẾN ĐỘ KHÓA HỌC',svInfo:'THÔNG TIN LỚP HỌC',svNoData:'Chưa có dữ liệu',svMaterials:'TÀI LIỆU HỌC TẬP',svNoMaterials:'Giáo viên chưa cung cấp tài liệu',
+ svPay:'LỊCH SỬ THANH TOÁN',payDate:'Ngày',payAmount:'Số tiền',payNoteTh:'Ghi chú',svNoPay:'Chưa có bản ghi thanh toán',outputPrefix:'Mục tiêu: ',regNote:'Học viên tự đăng ký'
+}};
+let LANG=localStorage.getItem('qna_lang')||'zh-Hant';
+if(!I18N[LANG])LANG='zh-Hant';
+function t(k){return (I18N[LANG]&&I18N[LANG][k])??I18N['zh-Hant'][k]??k;}
+function fmt(s,o){return s.replace(/\{(\w+)\}/g,(_,k)=>o[k]);}
+function tStatus(st){const m={'進行中':'st_active','暫停':'st_paused','已結束':'st_done'};return m[st]?t(m[st]):st;}
+function tPaid(p){const m={'已繳清':'paid_full','待繳費':'paid_pending','部分繳費':'paid_part'};return m[p]?t(m[p]):p;}
+function setLang(l){LANG=l;localStorage.setItem('qna_lang',l);applyLang();}
+function applyLang(){
+  document.documentElement.lang=LANG;
+  document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));
+  document.querySelectorAll('[data-i18n-ph]').forEach(e=>e.placeholder=t(e.dataset.i18nPh));
+  document.querySelectorAll('.show-pw').forEach(b=>{const i=b.parentNode.querySelector('input');b.textContent=i&&i.type==='password'?t('show'):t('hide');});
+  document.querySelectorAll('.lang-row button').forEach(b=>b.classList.toggle('on',b.id==='lg-'+LANG));
+  const sel=document.getElementById('langSel');if(sel)sel.value=LANG;
+  refreshView();
+}
+
+/* ---------- 雲端同步 ---------- */
+function refreshView(){
+  if(document.body.classList.contains('student-mode')){
+    const s=students.find(x=>x.id===sessionStorage.getItem('qna_sid'));
+    if(s)renderStudent(s);else if(cloudLoaded)logout();
+  }else if(!document.body.classList.contains('locked')){render();}
+}
+function cloudSaveStudent(s){return db.collection('students').doc(s.id).set(s);}
+function cloudDeleteStudent(id){return db.collection('students').doc(id).delete();}
+
+/* ---------- render ---------- */
+function render(){
+  const q=document.getElementById('q').value.trim().toLowerCase();
+  const fs=document.getElementById('fStatus').value;
+  const sort=document.getElementById('fSort').value;
+  let list=students.filter(s=>{
+    if(fs && s.status!==fs)return false;
+    if(!q)return true;
+    return [s.name,s.nationality,s.email,s.notes,s.level,s.outputLang].join(' ').toLowerCase().includes(q);
+  });
+  if(sort==='name')list.sort((a,b)=>a.name.localeCompare(b.name,'zh-Hant'));
+  else if(sort==='low')list.sort((a,b)=>remain(a)-remain(b));
+  else list.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+
+  const el=document.getElementById('cards');
+  if(!list.length){
+    el.innerHTML='<div class="empty"><div class="big">📚</div>'+esc(students.length?t('emptyNone'):t('emptyStart'))+'</div>';
+  }else{
+    el.innerHTML=list.map(card).join('');
+  }
+  document.getElementById('stTotal').textContent=students.length;
+  document.getElementById('stActive').textContent=students.filter(s=>s.status==='進行中').length;
+  document.getElementById('stLow').textContent=students.filter(s=>s.status==='進行中'&&s.total>0&&remain(s)<=2).length;
+  document.getElementById('stUnpaid').textContent=students.filter(s=>s.paid!=='已繳清').length;
+}
+function remain(s){return (Number(s.total)||0)-(Number(s.used)||0);}
+function badge(st){return st==='進行中'?'active':st==='暫停'?'paused':'done';}
+
+function card(s){
+  const r=remain(s),tot=Number(s.total)||0,used=Number(s.used)||0;
+  const pct=tot?Math.min(100,used/tot*100):0;
+  const low=tot>0&&r<=2&&s.status==='進行中';
+  const files=(s.files||[]).filter(f=>f.url||f.name).map(f=>f.url?`<a href="${esc(f.url)}" target="_blank">${esc(f.name||'—')}</a>`:esc(f.name)).join('、');
+  return `<div class="card">
+    <div class="top"><div class="who"><div class="avatar">${esc((s.name||'?').trim().charAt(0).toUpperCase())}</div><div><h3>${esc(s.name)}</h3><div class="flag">${esc(s.nationality||'—')}${s.gender?'｜'+esc(s.gender):''}</div></div></div>
+    <span class="badge ${badge(s.status)}">${esc(tStatus(s.status))}</span></div>
+    <div class="rows">
+      ${s.email?`<div class="r"><span class="k">${esc(t('email'))}</span><span class="v"><a href="mailto:${esc(s.email)}">${esc(s.email)}</a></span></div>`:''}
+      ${s.level?`<div class="r"><span class="k">${esc(t('level'))}</span><span class="v">${esc(s.level)}</span></div>`:''}
+      ${s.outputLang?`<div class="r"><span class="k">${esc(t('outputLang'))}</span><span class="v">${esc(s.outputLang)}</span></div>`:''}
+      ${s.schedule?`<div class="r"><span class="k">${esc(t('schedule'))}</span><span class="v">${esc(s.schedule)}${s.tz?'（'+esc(s.tz)+'）':''}</span></div>`:''}
+      ${s.googleLink?`<div class="r"><span class="k">Google</span><span class="v"><a href="${esc(s.googleLink)}" target="_blank">${esc(t('openLink'))}</a></span></div>`:''}
+      ${files?`<div class="r"><span class="k">${esc(t('materials'))}</span><span class="v">${files}</span></div>`:''}
+      ${s.notes?`<div class="r"><span class="k">${esc(t('notes'))}</span><span class="v">${esc(s.notes)}</span></div>`:''}
+    </div>
+    ${tot?`<div class="lessonbar ${low?'low':''}"><div class="txt"><span>${esc(fmt(t('lessonsProg'),{u:used,t:tot}))}</span><b>${esc(fmt(t('remainLessons'),{r}))}</b></div><div class="track"><div class="fill" style="width:${pct}%"></div></div></div>`:''}
+    ${s.paid!=='已繳清'?`<div class="unpaid-tag">💰 ${esc(tPaid(s.paid||'待繳費'))}</div>`:''}
+    <div class="acts">
+      <button class="btn-sm btn-edit" onclick="openModal('${s.id}')">${esc(t('edit'))}</button>
+      <button class="btn-sm btn-del" onclick="del('${s.id}')">${esc(t('del'))}</button>
+    </div>
+  </div>`;
+}
+
+/* ---------- modal ---------- */
+function addFileRow(f={}){
+  const d=document.createElement('div');d.className='sub-row';
+  d.innerHTML=`<input placeholder="${esc(t('fileName'))}" value="${esc(f.name||'')}"><input placeholder="${esc(t('fileUrl'))}" value="${esc(f.url||'')}"><button class="btn-x" onclick="this.parentNode.remove()">✕</button>`;
+  document.getElementById('fileList').appendChild(d);
+}
+function addPayRow(p={}){
+  const d=document.createElement('div');d.className='sub-row pay';
+  d.innerHTML=`<input type="date" value="${esc(p.date||'')}"><input placeholder="${esc(t('amount'))}" value="${esc(p.amount||'')}"><input placeholder="${esc(t('payNote'))}" value="${esc(p.note||'')}"><button class="btn-x" onclick="this.parentNode.remove()">✕</button>`;
+  document.getElementById('payList').appendChild(d);
+}
+function openModal(id){
+  editId=id||null;
+  const s=id?students.find(x=>x.id===id):{};
+  document.getElementById('mTitle').textContent=id?fmt(t('editTitle'),{n:s.name}):t('addTitle');
+  fName.value=s.name||'';fNation.value=s.nationality||'';fGender.value=s.gender||'';
+  fEmail.value=s.email||'';fPw.value=s.pw||'';fGoogle.value=s.googleLink||'';
+  fLevel.value=s.level||'';fOutput.value=s.outputLang||'';
+  fTotal.value=s.total??'';fUsed.value=s.used??'';fStat.value=s.status||'進行中';
+  fSchedule.value=s.schedule||'';fTz.value=s.tz||'';
+  fPaid.value=s.paid||'已繳清';fNotes.value=s.notes||'';
+  document.getElementById('fileList').innerHTML='';
+  (s.files&&s.files.length?s.files:[{}]).forEach(addFileRow);
+  document.getElementById('payList').innerHTML='';
+  (s.payments&&s.payments.length?s.payments:[]).forEach(addPayRow);
+  document.getElementById('overlay').classList.add('show');
+  setTimeout(()=>fName.focus(),50);
+}
+function closeModal(){document.getElementById('overlay').classList.remove('show');}
+document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+function save(){
+  const name=fName.value.trim();
+  if(!name){toast(t('needName'));fName.focus();return;}
+  const files=[...document.querySelectorAll('#fileList .sub-row')].map(r=>{
+    const[i1,i2]=r.querySelectorAll('input');return{name:i1.value.trim(),url:i2.value.trim()};
+  }).filter(f=>f.name||f.url);
+  const payments=[...document.querySelectorAll('#payList .sub-row')].map(r=>{
+    const[i1,i2,i3]=r.querySelectorAll('input');return{date:i1.value,amount:i2.value.trim(),note:i3.value.trim()};
+  }).filter(p=>p.date||p.amount||p.note);
+  const data={
+    name,nationality:fNation.value.trim(),gender:fGender.value,email:fEmail.value.trim(),pw:fPw.value.trim(),
+    googleLink:fGoogle.value.trim(),level:fLevel.value.trim(),outputLang:fOutput.value.trim(),
+    total:Number(fTotal.value)||0,used:Number(fUsed.value)||0,status:fStat.value,
+    schedule:fSchedule.value.trim(),tz:fTz.value.trim(),paid:fPaid.value,notes:fNotes.value.trim(),
+    files,payments
+  };
+  if(editId){
+    const old=students.find(x=>x.id===editId)||{};
+    cloudSaveStudent({...old,...data,id:editId});
+    toast(fmt(t('updated'),{n:name}));
+  }else{
+    const id='s'+Date.now()+Math.random().toString(36).slice(2,6);
+    cloudSaveStudent({id,createdAt:Date.now(),...data});
+    toast(fmt(t('added'),{n:name}));
+  }
+  closeModal();
+}
+function del(id){
+  const s=students.find(x=>x.id===id);
+  if(!confirm(fmt(t('confirmDel'),{n:s.name})))return;
+  cloudDeleteStudent(id);
+  toast(fmt(t('deleted'),{n:s.name}));
+}
+
+/* ---------- import / export ---------- */
+function dl(filename,content,type){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type}));
+  a.download=filename;a.click();URL.revokeObjectURL(a.href);
+}
+function exportJSON(){
+  dl('學習者備份_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(students,null,2),'application/json');
+  toast(t('exported'));
+}
+function importJSON(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{try{
+    const arr=JSON.parse(r.result);
+    if(!Array.isArray(arr))throw 0;
+    if(students.length&&!confirm(fmt(t('importMerge'),{c:students.length})))return;
+    arr.forEach(n=>{const id=n.id||('s'+Date.now()+Math.random().toString(36).slice(2,6));cloudSaveStudent({...n,id});});
+    toast(fmt(t('imported'),{c:arr.length}));
+  }catch(err){toast(t('importErr'));}};
+  r.readAsText(f);e.target.value='';
+}
+function exportCSV(){
+  const head=['姓名','國籍','性別','信箱','語言門檻','希望達到的程度','Google連結','上課資料','總堂數','已上堂數','剩餘堂數','狀態','上課時間','時區','繳費狀態','繳費紀錄','備註'];
+  const csv=[head.join(',')].concat(students.map(s=>[
+    s.name,s.nationality,s.gender,s.email,s.level,s.outputLang,s.googleLink,
+    (s.files||[]).map(f=>f.name+(f.url?' '+f.url:'')).join('；'),
+    s.total,s.used,remain(s),s.status,s.schedule,s.tz,s.paid,
+    (s.payments||[]).map(p=>[p.date,p.amount,p.note].filter(Boolean).join(' ')).join('；'),
+    s.notes
+  ].map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(','))).join('\r\n');
+  dl('學習者名單_'+new Date().toISOString().slice(0,10)+'.csv','﻿'+csv,'text/csv;charset=utf-8');
+  toast(t('csvExported'));
+}
+
+/* ---------- 登入 / 權限 ---------- */
+function adminPw(){return ADMINPW;}
+
+function showLoginView(v){
+  document.getElementById('vLogin').style.display=v==='login'?'':'none';
+  document.getElementById('vSignup').style.display=v==='signup'?'':'none';
+  document.getElementById('vAdmin').style.display=v==='admin'?'':'none';
+  document.getElementById('loginTabs').style.display=v==='admin'?'none':'flex';
+  document.getElementById('adminLink').style.display=v==='admin'?'none':'';
+  document.getElementById('tabLogin').classList.toggle('on',v==='login');
+  document.getElementById('tabSignup').classList.toggle('on',v==='signup');
+}
+function togglePw(id,btn){
+  const i=document.getElementById(id);
+  i.type=i.type==='password'?'text':'password';
+  btn.textContent=i.type==='password'?t('show'):t('hide');
+}
+function forgotPw(){
+  alert(t('forgotMsg'));
+}
+function teacherLogin(){
+  if(!cloudReady()){document.getElementById('errT').textContent=t('noCloud');return;}
+  if(document.getElementById('lAdminPw').value===adminPw()){
+    sessionStorage.setItem('qna_role','teacher');enterTeacher();
+  }else document.getElementById('errT').textContent=t('pwWrong');
+}
+function studentLogin(){
+  const nm=document.getElementById('lStuName').value.trim();
+  const pw=document.getElementById('lStuPw').value;
+  const err=document.getElementById('errS');
+  if(!cloudReady()){err.textContent=t('noCloud');return;}
+  if(!cloudLoaded){err.textContent=t('loadingData');return;}
+  if(!nm){err.textContent=t('errName');return;}
+  const key=nm.toLowerCase();
+  const s=students.find(x=>(x.name||'').toLowerCase()===key||(x.email||'').toLowerCase()===key);
+  if(!s){err.textContent=t('errNotFound');return;}
+  if(!s.pw){err.textContent=t('errNoPw');return;}
+  if(s.pw!==pw){err.textContent=t('errWrongPw');return;}
+  sessionStorage.setItem('qna_role','student');
+  sessionStorage.setItem('qna_sid',s.id);
+  enterStudent(s);
+}
+function registerStudent(){
+  const nm=document.getElementById('rName').value.trim();
+  const em=document.getElementById('rEmail').value.trim();
+  const pw=document.getElementById('rPw').value;
+  const err=document.getElementById('errR');
+  if(!cloudReady()){err.textContent=t('noCloud');return;}
+  if(!cloudLoaded){err.textContent=t('loadingData');return;}
+  if(!nm){err.textContent=t('errName');return;}
+  if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){err.textContent=t('errEmail');return;}
+  if(!pw||pw.length<4){err.textContent=t('errPwShort');return;}
+  if(students.some(x=>(x.name||'').toLowerCase()===nm.toLowerCase()||(x.email||'').toLowerCase()===em.toLowerCase())){
+    err.textContent=t('errDup');return;
+  }
+  const s={id:'s'+Date.now()+Math.random().toString(36).slice(2,6),createdAt:Date.now(),
+    name:nm,email:em,pw,nationality:'',gender:'',googleLink:'',level:'',outputLang:'',
+    total:0,used:0,status:'進行中',schedule:'',tz:'',paid:'待繳費',
+    notes:t('regNote')+' '+new Date().toISOString().slice(0,10),files:[],payments:[]};
+  cloudSaveStudent(s);
+  sessionStorage.setItem('qna_role','student');
+  sessionStorage.setItem('qna_sid',s.id);
+  enterStudent(s);
+}
+function enterTeacher(){
+  document.body.classList.remove('locked','student-mode');
+  document.getElementById('loginScreen').style.display='none';
+  render();
+}
+function enterStudent(s){
+  document.body.classList.remove('locked');
+  document.body.classList.add('student-mode');
+  document.getElementById('loginScreen').style.display='none';
+  renderStudent(s);
+}
+function logout(){
+  sessionStorage.removeItem('qna_role');sessionStorage.removeItem('qna_sid');
+  document.body.classList.add('locked');document.body.classList.remove('student-mode');
+  document.getElementById('loginScreen').style.display='flex';
+  ['lAdminPw','lStuName','lStuPw','rName','rEmail','rPw'].forEach(id=>document.getElementById(id).value='');
+  ['errT','errS','errR'].forEach(id=>document.getElementById(id).textContent='');
+  showLoginView('login');
+}
+function changeAdminPw(){
+  const old=prompt(t('pwPromptOld'));
+  if(old===null)return;
+  if(old!==adminPw()){alert(t('pwWrong'));return;}
+  const nw=prompt(t('pwPromptNew'));
+  if(!nw||nw.length<4){alert(t('pwTooShort'));return;}
+  ADMINPW=nw;
+  db.collection('settings').doc('config').set({adminPw:nw});
+  toast(t('pwUpdated'));
+}
+
+/* ---------- 學生視圖（唯讀） ---------- */
+function renderStudent(s){
+  const r=remain(s),tot=Number(s.total)||0,used=Number(s.used)||0;
+  const pct=tot?Math.min(100,used/tot*100):0;
+  const files=(s.files||[]).filter(f=>f.url||f.name);
+  const pays=(s.payments||[]);
+  document.getElementById('studentMain').innerHTML=`
+  <div class="sv-hello">
+    <div><h2>${esc(fmt(t('welcome'),{n:s.name}))}</h2>
+    <p>${esc(s.level||'')}${s.outputLang?'｜'+esc(t('outputPrefix'))+esc(s.outputLang):''}</p></div>
+    <span class="badge ${badge(s.status)}">${esc(tStatus(s.status))}</span>
+  </div>
+  ${tot?`<div class="sv-sec"><h3>${esc(t('svProgress'))}</h3>
+    <div class="lessonbar ${tot>0&&r<=2?'low':''}">
+      <div class="txt"><span>${esc(fmt(t('lessonsProg'),{u:used,t:tot}))}</span><b>${esc(fmt(t('remainLessons'),{r}))}</b></div>
+      <div class="track"><div class="fill" style="width:${pct}%"></div></div></div></div>`:''}
+  <div class="sv-sec"><h3>${esc(t('svInfo'))}</h3>
+    <div class="rows">
+      ${s.schedule?`<div class="r"><span class="k">${esc(t('schedule'))}</span><span class="v">${esc(s.schedule)}${s.tz?'（'+esc(s.tz)+'）':''}</span></div>`:''}
+      ${s.googleLink?`<div class="r"><span class="k">Google</span><span class="v"><a href="${esc(s.googleLink)}" target="_blank">${esc(t('openLink'))}</a></span></div>`:''}
+      ${!s.schedule&&!s.googleLink?`<div class="r"><span class="v" style="color:var(--muted)">${esc(t('svNoData'))}</span></div>`:''}
+    </div></div>
+  <div class="sv-sec"><h3>${esc(t('svMaterials'))}</h3>
+    ${files.length?`<div class="rows">${files.map(f=>`<div class="r"><span class="v">📄 ${f.url?`<a href="${esc(f.url)}" target="_blank">${esc(f.name||'—')}</a>`:esc(f.name)}</span></div>`).join('')}</div>`:`<div style="color:var(--muted);font-size:.86rem">${esc(t('svNoMaterials'))}</div>`}
+  </div>
+  <div class="sv-sec"><h3>${esc(t('svPay'))}</h3>
+    <div style="margin-bottom:10px"><span class="badge ${s.paid==='已繳清'?'active':'paused'}">${esc(tPaid(s.paid||'待繳費'))}</span></div>
+    ${pays.length?`<table class="pay-table"><tr><th>${esc(t('payDate'))}</th><th>${esc(t('payAmount'))}</th><th>${esc(t('payNoteTh'))}</th></tr>
+      ${pays.map(p=>`<tr><td>${esc(p.date||'—')}</td><td>${esc(p.amount||'—')}</td><td>${esc(p.note||'')}</td></tr>`).join('')}</table>`:`<div style="color:var(--muted);font-size:.86rem">${esc(t('svNoPay'))}</div>`}
+  </div>`;
+}
+
+/* ---------- 啟動 ---------- */
+(function init(){
+  applyLang();
+  logout();
+  if(!cloudReady()){
+    document.getElementById('setupWarn').style.display='block';
+    return;
+  }
+  firebase.initializeApp(FIREBASE_CONFIG);
+  db=firebase.firestore();
+  db.collection('settings').doc('config').onSnapshot(d=>{
+    if(d.exists&&d.data().adminPw)ADMINPW=d.data().adminPw;
+  });
+  db.collection('students').onSnapshot(snap=>{
+    students=snap.docs.map(d=>d.data());
+    if(!cloudLoaded){
+      cloudLoaded=true;
+      const role=sessionStorage.getItem('qna_role');
+      if(role==='teacher'){enterTeacher();return;}
+      if(role==='student'){
+        const s=students.find(x=>x.id===sessionStorage.getItem('qna_sid'));
+        if(s){enterStudent(s);return;}
+      }
+    }
+    refreshView();
+  },err=>{console.error('Firestore error',err);});
+})();
+</script>
+</body>
+</html>
