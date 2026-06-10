@@ -128,6 +128,7 @@ main{max-width:1180px;margin:0 auto;padding:24px 20px 60px;}
 .login-links a{color:#3b7ce0;text-decoration:underline;}
 .login-hint{font-size:.78rem;color:#9aa3ad;margin-top:16px;min-height:1.2em;line-height:1.6;}
 .admin-link{margin-top:30px;}
+.view-title{font-size:1.05rem;font-weight:bold;color:#2b3440;margin:30px 0 18px;letter-spacing:2px;}
 .admin-link a{color:#9aa3ad;font-size:.9rem;text-decoration:none;}
 .admin-link a:hover{color:#3b7ce0;}
 /* ---------- language switch ---------- */
@@ -201,7 +202,8 @@ body.student-mode .toolbar .teacher-only{display:none;}
 
     <!-- 忘記密碼 -->
     <div id="vForgot" style="display:none">
-      <p style="font-size:.9rem;color:#667;margin-bottom:14px;text-align:left" data-i18n="forgotDesc">輸入你的學習者名稱或 Email，送出後老師會協助你重設密碼。</p>
+      <div class="view-title" data-i18n="forgot">忘記密碼？</div>
+      <p style="font-size:.9rem;color:#667;margin-bottom:16px;text-align:left" data-i18n="forgotDesc">輸入你的學習者名稱或 Email，送出後老師會協助你重設密碼。</p>
       <div class="lfield"><input id="fgName" data-i18n-ph="phNameOrEmail" placeholder="學習者名稱或 Email" onkeydown="if(event.key==='Enter')sendResetReq()"></div>
       <div class="login-err" id="errF"></div>
       <button class="btn-login" onclick="sendResetReq()" data-i18n="sendReq">送出申請 →</button>
@@ -220,6 +222,7 @@ body.student-mode .toolbar .teacher-only{display:none;}
 
     <!-- 老師登入 -->
     <div id="vAdmin" style="display:none">
+      <div class="view-title" data-i18n="adminLink">教師登入</div>
       <div class="lfield pw"><input type="password" id="lAdminPw" data-i18n-ph="phAdminPw" placeholder="老師管理密碼" onkeydown="if(event.key==='Enter')teacherLogin()"><button class="show-pw" onclick="togglePw('lAdminPw',this)">顯示</button></div>
       <div class="login-err" id="errT"></div>
       <button class="btn-login" onclick="teacherLogin()" data-i18n="btnTeacher">老師登入 →</button>
