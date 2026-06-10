@@ -147,6 +147,7 @@ body.student-mode main#teacherMain{display:none !important;}
 .pay-table th{color:var(--muted);font-weight:normal;font-size:.78rem;}
 body.student-mode .toolbar .teacher-only{display:none;}
 .setup-warn{display:none;background:#fff4e0;color:#9a6b00;border:1px solid #f0d9a8;border-radius:10px;padding:12px 14px;font-size:.85rem;margin-bottom:16px;text-align:left;line-height:1.6;}
+.reset-banner{background:#fff4e0;color:#9a6b00;border:1px solid #f0d9a8;border-radius:12px;padding:13px 16px;font-size:.9rem;margin-bottom:18px;line-height:1.6;}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -188,6 +189,15 @@ body.student-mode .toolbar .teacher-only{display:none;}
       <div class="login-err" id="errS"></div>
       <button class="btn-login" onclick="studentLogin()" data-i18n="btnLogin">登入 →</button>
       <div class="login-links"><a href="#" onclick="forgotPw();return false;" data-i18n="forgot">忘記密碼？</a></div>
+    </div>
+
+    <!-- 忘記密碼 -->
+    <div id="vForgot" style="display:none">
+      <p style="font-size:.9rem;color:#667;margin-bottom:14px;text-align:left" data-i18n="forgotDesc">輸入你的學習者名稱或 Email，送出後老師會協助你重設密碼。</p>
+      <div class="lfield"><input id="fgName" data-i18n-ph="phNameOrEmail" placeholder="學習者名稱或 Email" onkeydown="if(event.key==='Enter')sendResetReq()"></div>
+      <div class="login-err" id="errF"></div>
+      <button class="btn-login" onclick="sendResetReq()" data-i18n="sendReq">送出申請 →</button>
+      <div class="login-links"><a href="#" onclick="showLoginView('login');return false;" data-i18n="backToLogin">← 返回學習者登入</a></div>
     </div>
 
     <!-- 新建帳號 -->
@@ -234,6 +244,7 @@ body.student-mode .toolbar .teacher-only{display:none;}
 <main id="studentMain"></main>
 
 <main id="teacherMain">
+  <div id="resetNotice"></div>
   <div class="stats">
     <div class="stat"><div class="ico">👥</div><div><div class="num" id="stTotal">0</div><div class="lbl" data-i18n="stTotal">學習者總數</div></div></div>
     <div class="stat"><div class="ico">📖</div><div><div class="num" id="stActive">0</div><div class="lbl" data-i18n="stActive">進行中</div></div></div>
@@ -384,7 +395,9 @@ const I18N={
  welcome:'{n}，歡迎回來！',svProgress:'課 程 進 度',svInfo:'上 課 資 訊',svNoData:'尚無資料',svMaterials:'上 課 資 料',svNoMaterials:'老師尚未提供上課資料',
  svPay:'繳 費 紀 錄',payDate:'日期',payAmount:'金額',payNoteTh:'說明',svNoPay:'尚無繳費紀錄',outputPrefix:'目標程度：',regNote:'學生自行註冊',
  firstDateL:'第一堂課日期',classTimeL:'上課時刻',nextLesson:'下一堂課',svSchedule:'上 課 日 程',lessonN:'第 {i} 堂',doneL:'已完成',upcomingL:'未上課',
- remindStu:'提醒：你的課程將在 {m} 分鐘後開始！',remindTea:'提醒：{n} 的課程將在 {m} 分鐘後開始'
+ remindStu:'提醒：你的課程將在 {m} 分鐘後開始！',remindTea:'提醒：{n} 的課程將在 {m} 分鐘後開始',
+ forgotDesc:'輸入你的學習者名稱或 Email，送出後老師會協助你重設密碼。',phNameOrEmail:'學習者名稱或 Email',sendReq:'送出申請 →',
+ reqSent:'已通知老師，請等候老師與你聯繫',reqNotFound:'找不到這個名稱或 Email',resetBanner:'{c} 位學習者申請重設密碼：{names}',resetTag:'申請重設密碼'
 },
 'zh-Hans':{
  appTitle:'学习者管理',addStudent:'＋ 新增学习者',exportBackup:'导出备份',importBackup:'导入备份',exportCsv:'导出 CSV',adminPwBtn:'管理密码',logoutBtn:'退出登录',
@@ -417,7 +430,9 @@ const I18N={
  welcome:'{n}，欢迎回来！',svProgress:'课 程 进 度',svInfo:'上 课 信 息',svNoData:'暂无数据',svMaterials:'上 课 资 料',svNoMaterials:'老师尚未提供上课资料',
  svPay:'缴 费 记 录',payDate:'日期',payAmount:'金额',payNoteTh:'说明',svNoPay:'暂无缴费记录',outputPrefix:'目标程度：',regNote:'学生自行注册',
  firstDateL:'第一节课日期',classTimeL:'上课时刻',nextLesson:'下一节课',svSchedule:'上 课 日 程',lessonN:'第 {i} 节',doneL:'已完成',upcomingL:'未上课',
- remindStu:'提醒：你的课程将在 {m} 分钟后开始！',remindTea:'提醒：{n} 的课程将在 {m} 分钟后开始'
+ remindStu:'提醒：你的课程将在 {m} 分钟后开始！',remindTea:'提醒：{n} 的课程将在 {m} 分钟后开始',
+ forgotDesc:'输入你的学习者名称或 Email，提交后老师会协助你重置密码。',phNameOrEmail:'学习者名称或 Email',sendReq:'提交申请 →',
+ reqSent:'已通知老师，请等候老师与你联系',reqNotFound:'找不到这个名称或 Email',resetBanner:'{c} 位学习者申请重置密码：{names}',resetTag:'申请重置密码'
 },
 'en':{
  appTitle:'Learner Management',addStudent:'＋ Add Learner',exportBackup:'Export Backup',importBackup:'Import Backup',exportCsv:'Export CSV',adminPwBtn:'Admin Password',logoutBtn:'Log out',
@@ -450,7 +465,9 @@ const I18N={
  welcome:'Welcome back, {n}!',svProgress:'COURSE PROGRESS',svInfo:'CLASS INFO',svNoData:'No data yet',svMaterials:'MATERIALS',svNoMaterials:'No materials from your teacher yet',
  svPay:'PAYMENTS',payDate:'Date',payAmount:'Amount',payNoteTh:'Note',svNoPay:'No payment records yet',outputPrefix:'Target level: ',regNote:'Self-registered',
  firstDateL:'First lesson date',classTimeL:'Class start time',nextLesson:'Next lesson',svSchedule:'LESSON SCHEDULE',lessonN:'Lesson {i}',doneL:'Done',upcomingL:'Upcoming',
- remindStu:'Reminder: your lesson starts in {m} minutes!',remindTea:'Reminder: {n} has a lesson in {m} minutes'
+ remindStu:'Reminder: your lesson starts in {m} minutes!',remindTea:'Reminder: {n} has a lesson in {m} minutes',
+ forgotDesc:'Enter your learner name or email and your teacher will help you reset your password.',phNameOrEmail:'Learner name or email',sendReq:'Send request →',
+ reqSent:'Your teacher has been notified — please wait for them to contact you',reqNotFound:'Name or email not found',resetBanner:'{c} learner(s) requested a password reset: {names}',resetTag:'Password reset requested'
 },
 'vi':{
  appTitle:'Quản lý học viên',addStudent:'＋ Thêm học viên',exportBackup:'Xuất bản sao lưu',importBackup:'Nhập bản sao lưu',exportCsv:'Xuất CSV',adminPwBtn:'Mật khẩu quản trị',logoutBtn:'Đăng xuất',
@@ -483,7 +500,9 @@ const I18N={
  welcome:'{n}, chào mừng trở lại!',svProgress:'TIẾN ĐỘ KHÓA HỌC',svInfo:'THÔNG TIN LỚP HỌC',svNoData:'Chưa có dữ liệu',svMaterials:'TÀI LIỆU HỌC TẬP',svNoMaterials:'Giáo viên chưa cung cấp tài liệu',
  svPay:'LỊCH SỬ THANH TOÁN',payDate:'Ngày',payAmount:'Số tiền',payNoteTh:'Ghi chú',svNoPay:'Chưa có bản ghi thanh toán',outputPrefix:'Mục tiêu: ',regNote:'Học viên tự đăng ký',
  firstDateL:'Ngày học buổi đầu tiên',classTimeL:'Giờ bắt đầu học',nextLesson:'Buổi học tiếp theo',svSchedule:'LỊCH HỌC',lessonN:'Buổi {i}',doneL:'Đã hoàn thành',upcomingL:'Sắp tới',
- remindStu:'Nhắc nhở: buổi học của bạn bắt đầu sau {m} phút!',remindTea:'Nhắc nhở: buổi học của {n} bắt đầu sau {m} phút'
+ remindStu:'Nhắc nhở: buổi học của bạn bắt đầu sau {m} phút!',remindTea:'Nhắc nhở: buổi học của {n} bắt đầu sau {m} phút',
+ forgotDesc:'Nhập tên học viên hoặc email, giáo viên sẽ giúp bạn đặt lại mật khẩu.',phNameOrEmail:'Tên học viên hoặc email',sendReq:'Gửi yêu cầu →',
+ reqSent:'Đã thông báo cho giáo viên — vui lòng chờ giáo viên liên hệ',reqNotFound:'Không tìm thấy tên hoặc email',resetBanner:'{c} học viên yêu cầu đặt lại mật khẩu: {names}',resetTag:'Yêu cầu đặt lại mật khẩu'
 }};
 let LANG=localStorage.getItem('qna_lang')||'zh-Hant';
 if(!I18N[LANG])LANG='zh-Hant';
@@ -571,6 +590,8 @@ function render(){
   }else{
     el.innerHTML=list.map(card).join('');
   }
+  const reqs=students.filter(s=>s.resetReq);
+  document.getElementById('resetNotice').innerHTML=reqs.length?`<div class="reset-banner">🔑 ${esc(fmt(t('resetBanner'),{c:reqs.length,names:reqs.map(x=>x.name).join('、')}))}</div>`:'';
   document.getElementById('stTotal').textContent=students.length;
   document.getElementById('stActive').textContent=students.filter(s=>s.status==='進行中').length;
   document.getElementById('stLow').textContent=students.filter(s=>s.status==='進行中'&&s.total>0&&remain(s)<=2).length;
@@ -600,6 +621,7 @@ function card(s){
     </div>
     ${tot?`<div class="lessonbar ${low?'low':''}"><div class="txt"><span>${esc(fmt(t('lessonsProg'),{u:used,t:tot}))}</span><b>${esc(fmt(t('remainLessons'),{r}))}</b></div><div class="track"><div class="fill" style="width:${pct}%"></div></div></div>`:''}
     ${s.paid!=='已繳清'?`<div class="unpaid-tag">💰 ${esc(tPaid(s.paid||'待繳費'))}</div>`:''}
+    ${s.resetReq?`<div class="unpaid-tag">🔑 ${esc(t('resetTag'))}</div>`:''}
     <div class="acts">
       <button class="btn-sm btn-edit" onclick="openModal('${s.id}')">${esc(t('edit'))}</button>
       <button class="btn-sm btn-del" onclick="del('${s.id}')">${esc(t('del'))}</button>
@@ -655,6 +677,7 @@ function save(){
     total:Number(fTotal.value)||0,used:Number(fUsed.value)||0,status:fStat.value,
     schedule:fSchedule.value.trim(),tz:fTz.value.trim(),paid:fPaid.value,notes:fNotes.value.trim(),
     firstDate:fFirstDate.value,classTime:fClassTime.value,
+    resetReq:null,
     files,payments
   };
   if(editId){
@@ -714,11 +737,12 @@ function exportCSV(){
 function adminPw(){return ADMINPW;}
 
 function showLoginView(v){
-  document.getElementById('vLogin').style.display=v==='login'?'':'none';
-  document.getElementById('vSignup').style.display=v==='signup'?'':'none';
-  document.getElementById('vAdmin').style.display=v==='admin'?'':'none';
-  document.getElementById('loginTabs').style.display=v==='admin'?'none':'flex';
-  document.getElementById('adminLink').style.display=v==='admin'?'none':'';
+  const map={login:'vLogin',signup:'vSignup',admin:'vAdmin',forgot:'vForgot'};
+  Object.values(map).forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById(map[v]||'vLogin').style.display='';
+  const tabsOn=v==='login'||v==='signup';
+  document.getElementById('loginTabs').style.display=tabsOn?'flex':'none';
+  document.getElementById('adminLink').style.display=tabsOn?'':'none';
   document.getElementById('tabLogin').classList.toggle('on',v==='login');
   document.getElementById('tabSignup').classList.toggle('on',v==='signup');
 }
@@ -728,7 +752,21 @@ function togglePw(id,btn){
   btn.textContent=i.type==='password'?t('show'):t('hide');
 }
 function forgotPw(){
-  alert(t('forgotMsg'));
+  showLoginView('forgot');
+  setTimeout(()=>document.getElementById('fgName').focus(),50);
+}
+function sendResetReq(){
+  const key=document.getElementById('fgName').value.trim().toLowerCase();
+  const err=document.getElementById('errF');
+  if(!cloudReady()){err.textContent=t('noCloud');return;}
+  if(!cloudLoaded){err.textContent=t('loadingData');return;}
+  if(!key){err.textContent=t('errName');return;}
+  const s=students.find(x=>(x.name||'').toLowerCase()===key||(x.email||'').toLowerCase()===key);
+  if(!s){err.textContent=t('reqNotFound');return;}
+  cloudSaveStudent({...s,resetReq:Date.now()});
+  document.getElementById('fgName').value='';err.textContent='';
+  toast(t('reqSent'));
+  showLoginView('login');
 }
 function teacherLogin(){
   if(!cloudReady()){document.getElementById('errT').textContent=t('noCloud');return;}
@@ -791,8 +829,8 @@ function logout(){
   sessionStorage.removeItem('qna_role');sessionStorage.removeItem('qna_sid');
   document.body.classList.add('locked');document.body.classList.remove('student-mode');
   document.getElementById('loginScreen').style.display='flex';
-  ['lAdminPw','lStuName','lStuPw','rName','rEmail','rPw'].forEach(id=>document.getElementById(id).value='');
-  ['errT','errS','errR'].forEach(id=>document.getElementById(id).textContent='');
+  ['lAdminPw','lStuName','lStuPw','rName','rEmail','rPw','fgName'].forEach(id=>document.getElementById(id).value='');
+  ['errT','errS','errR','errF'].forEach(id=>document.getElementById(id).textContent='');
   showLoginView('login');
 }
 function changeAdminPw(){
