@@ -7,8 +7,9 @@
 <style>
 :root{
   --primary:#3b7ce0; --primary-dark:#2a5fb8; --primary-light:#e8f1fd;
-  --ink:#1f2937; --muted:#64748b; --bg:#f4f8fc; --card:#ffffff;
-  --border:#dfe8f3; --ok:#2e9e5b; --warn:#d98a00; --bad:#d6453d;
+  --ink:#1f2937; --muted:#64748b; --bg:#f4efe6; --card:#ffffff;
+  --border:#e8e0d2; --ok:#2e9e5b; --warn:#d98a00; --bad:#d6453d;
+  --red:#9d2f26; --red-dark:#8c2a21;
   --gold:#3b7ce0; --sky:#eaf3ff;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -16,7 +17,7 @@ body{font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;ba
 /* 依語言切換字型：簡中改用簡體字型，避免以繁體字型渲染造成字形錯誤 */
 html[lang="zh-Hans"] body{font-family:"Noto Sans SC","Microsoft YaHei","PingFang SC",SimHei,sans-serif;}
 html[lang="en"] body,html[lang="vi"] body{font-family:"Segoe UI","Helvetica Neue",Arial,"Noto Sans",sans-serif;}
-header{background:linear-gradient(120deg,#4a8bee 0%,#2a5fb8 100%);color:#fff;padding:20px 30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;box-shadow:0 2px 12px rgba(42,95,184,.18);}
+header{background:linear-gradient(120deg,#8c2a21 0%,#b8463c 55%,#9d2f26 100%);color:#fff;padding:20px 30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;box-shadow:0 2px 12px rgba(140,43,34,.28);}
 header h1{font-size:1.4rem;letter-spacing:1px;}
 header h1 span{font-size:.85rem;opacity:.85;font-weight:normal;margin-left:10px;}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;}
@@ -103,8 +104,11 @@ main{max-width:1180px;margin:0 auto;padding:24px 20px 60px;}
 .toast.show{opacity:1;}
 @media(max-width:640px){.grid2,.grid3{grid-template-columns:1fr;}.sub-row,.sub-row.pay{grid-template-columns:1fr 1fr 34px;}}
 /* ---------- login ---------- */
-#loginScreen{position:fixed;inset:0;background:#f5f7fa;display:flex;align-items:flex-start;justify-content:center;z-index:200;padding:46px 20px;overflow-y:auto;}
-.login-box{width:100%;max-width:430px;text-align:center;}
+#loginScreen{position:fixed;inset:0;background:#f4efe6;display:flex;flex-direction:column;align-items:center;z-index:200;padding:0 0 50px;overflow-y:auto;}
+.login-banner{width:100%;background:linear-gradient(120deg,#8c2a21 0%,#b8463c 55%,#9d2f26 100%);color:#fff;text-align:center;padding:26px 16px 22px;box-shadow:0 2px 14px rgba(140,43,34,.3);margin-bottom:44px;flex-shrink:0;}
+.login-banner h1{font-size:1.55rem;letter-spacing:2px;}
+.login-banner p{font-size:.88rem;opacity:.88;margin-top:7px;letter-spacing:1px;}
+.login-box{width:100%;max-width:440px;text-align:center;background:#fff;border-radius:18px;padding:36px 32px 30px;box-shadow:0 8px 30px rgba(80,50,30,.1);}
 .login-box .logo h2{font-family:Georgia,"Times New Roman",serif;font-size:2.05rem;color:#1a1a1a;margin-top:14px;}
 .login-box .sub1{font-size:1.18rem;font-weight:bold;color:#222;margin-top:10px;letter-spacing:3px;}
 .login-box .sub2{font-size:.9rem;color:#9aa3ad;margin-top:10px;letter-spacing:1px;}
@@ -156,6 +160,10 @@ body.student-mode .toolbar .teacher-only{display:none;}
 
 <!-- 登入畫面 -->
 <div id="loginScreen">
+  <div class="login-banner">
+    <h1 data-i18n="sub1">華語學習者平台</h1>
+    <p data-i18n="sub2">課程管理｜個人學習進度追蹤</p>
+  </div>
   <div class="login-box">
     <div class="logo">
       <svg width="58" height="48" viewBox="0 0 58 48" aria-hidden="true">
