@@ -293,6 +293,8 @@ body.student-mode .toolbar .teacher-only{display:none;}
         <div class="field"><label data-i18n="scheduleLabel">上課時間</label><input id="fSchedule" placeholder="例：每週三 20:00"></div>
         <div class="field"><label data-i18n="tzLabel">學生時區</label><input id="fTz" list="dlTz" placeholder="例：UTC+9 日本">
           <datalist id="dlTz"><option>UTC+7 越南</option><option>UTC+8 臺灣</option><option>UTC+9 日本</option><option>UTC-5 紐約</option></datalist></div>
+        <div class="field"><label data-i18n="firstDateL">第一堂課日期</label><input id="fFirstDate" type="date"></div>
+        <div class="field"><label data-i18n="classTimeL">上課時刻</label><input id="fClassTime" type="time"></div>
       </div>
     </div>
 
@@ -380,7 +382,9 @@ const I18N={
  forgotMsg:'請聯絡老師重設密碼：\nqnachinese@gmail.com',
  loadingData:'資料載入中，請稍候再試',noCloud:'尚未連接雲端資料庫，請先完成 Firebase 設定',
  welcome:'{n}，歡迎回來！',svProgress:'課 程 進 度',svInfo:'上 課 資 訊',svNoData:'尚無資料',svMaterials:'上 課 資 料',svNoMaterials:'老師尚未提供上課資料',
- svPay:'繳 費 紀 錄',payDate:'日期',payAmount:'金額',payNoteTh:'說明',svNoPay:'尚無繳費紀錄',outputPrefix:'目標程度：',regNote:'學生自行註冊'
+ svPay:'繳 費 紀 錄',payDate:'日期',payAmount:'金額',payNoteTh:'說明',svNoPay:'尚無繳費紀錄',outputPrefix:'目標程度：',regNote:'學生自行註冊',
+ firstDateL:'第一堂課日期',classTimeL:'上課時刻',nextLesson:'下一堂課',svSchedule:'上 課 日 程',lessonN:'第 {i} 堂',doneL:'已完成',upcomingL:'未上課',
+ remindStu:'提醒：你的課程將在 {m} 分鐘後開始！',remindTea:'提醒：{n} 的課程將在 {m} 分鐘後開始'
 },
 'zh-Hans':{
  appTitle:'学习者管理',addStudent:'＋ 新增学习者',exportBackup:'导出备份',importBackup:'导入备份',exportCsv:'导出 CSV',adminPwBtn:'管理密码',logoutBtn:'退出登录',
@@ -411,7 +415,9 @@ const I18N={
  forgotMsg:'请联系老师重置密码：\nqnachinese@gmail.com',
  loadingData:'数据加载中，请稍候再试',noCloud:'尚未连接云端数据库，请先完成 Firebase 设置',
  welcome:'{n}，欢迎回来！',svProgress:'课 程 进 度',svInfo:'上 课 信 息',svNoData:'暂无数据',svMaterials:'上 课 资 料',svNoMaterials:'老师尚未提供上课资料',
- svPay:'缴 费 记 录',payDate:'日期',payAmount:'金额',payNoteTh:'说明',svNoPay:'暂无缴费记录',outputPrefix:'目标程度：',regNote:'学生自行注册'
+ svPay:'缴 费 记 录',payDate:'日期',payAmount:'金额',payNoteTh:'说明',svNoPay:'暂无缴费记录',outputPrefix:'目标程度：',regNote:'学生自行注册',
+ firstDateL:'第一节课日期',classTimeL:'上课时刻',nextLesson:'下一节课',svSchedule:'上 课 日 程',lessonN:'第 {i} 节',doneL:'已完成',upcomingL:'未上课',
+ remindStu:'提醒：你的课程将在 {m} 分钟后开始！',remindTea:'提醒：{n} 的课程将在 {m} 分钟后开始'
 },
 'en':{
  appTitle:'Learner Management',addStudent:'＋ Add Learner',exportBackup:'Export Backup',importBackup:'Import Backup',exportCsv:'Export CSV',adminPwBtn:'Admin Password',logoutBtn:'Log out',
@@ -442,7 +448,9 @@ const I18N={
  forgotMsg:'Please contact your teacher to reset your password:\nqnachinese@gmail.com',
  loadingData:'Loading data — please try again in a moment',noCloud:'Cloud database not connected — please finish the Firebase setup first',
  welcome:'Welcome back, {n}!',svProgress:'COURSE PROGRESS',svInfo:'CLASS INFO',svNoData:'No data yet',svMaterials:'MATERIALS',svNoMaterials:'No materials from your teacher yet',
- svPay:'PAYMENTS',payDate:'Date',payAmount:'Amount',payNoteTh:'Note',svNoPay:'No payment records yet',outputPrefix:'Target level: ',regNote:'Self-registered'
+ svPay:'PAYMENTS',payDate:'Date',payAmount:'Amount',payNoteTh:'Note',svNoPay:'No payment records yet',outputPrefix:'Target level: ',regNote:'Self-registered',
+ firstDateL:'First lesson date',classTimeL:'Class start time',nextLesson:'Next lesson',svSchedule:'LESSON SCHEDULE',lessonN:'Lesson {i}',doneL:'Done',upcomingL:'Upcoming',
+ remindStu:'Reminder: your lesson starts in {m} minutes!',remindTea:'Reminder: {n} has a lesson in {m} minutes'
 },
 'vi':{
  appTitle:'Quản lý học viên',addStudent:'＋ Thêm học viên',exportBackup:'Xuất bản sao lưu',importBackup:'Nhập bản sao lưu',exportCsv:'Xuất CSV',adminPwBtn:'Mật khẩu quản trị',logoutBtn:'Đăng xuất',
@@ -473,7 +481,9 @@ const I18N={
  forgotMsg:'Vui lòng liên hệ giáo viên để đặt lại mật khẩu:\nqnachinese@gmail.com',
  loadingData:'Đang tải dữ liệu — vui lòng thử lại sau giây lát',noCloud:'Chưa kết nối cơ sở dữ liệu đám mây — vui lòng hoàn tất cài đặt Firebase',
  welcome:'{n}, chào mừng trở lại!',svProgress:'TIẾN ĐỘ KHÓA HỌC',svInfo:'THÔNG TIN LỚP HỌC',svNoData:'Chưa có dữ liệu',svMaterials:'TÀI LIỆU HỌC TẬP',svNoMaterials:'Giáo viên chưa cung cấp tài liệu',
- svPay:'LỊCH SỬ THANH TOÁN',payDate:'Ngày',payAmount:'Số tiền',payNoteTh:'Ghi chú',svNoPay:'Chưa có bản ghi thanh toán',outputPrefix:'Mục tiêu: ',regNote:'Học viên tự đăng ký'
+ svPay:'LỊCH SỬ THANH TOÁN',payDate:'Ngày',payAmount:'Số tiền',payNoteTh:'Ghi chú',svNoPay:'Chưa có bản ghi thanh toán',outputPrefix:'Mục tiêu: ',regNote:'Học viên tự đăng ký',
+ firstDateL:'Ngày học buổi đầu tiên',classTimeL:'Giờ bắt đầu học',nextLesson:'Buổi học tiếp theo',svSchedule:'LỊCH HỌC',lessonN:'Buổi {i}',doneL:'Đã hoàn thành',upcomingL:'Sắp tới',
+ remindStu:'Nhắc nhở: buổi học của bạn bắt đầu sau {m} phút!',remindTea:'Nhắc nhở: buổi học của {n} bắt đầu sau {m} phút'
 }};
 let LANG=localStorage.getItem('qna_lang')||'zh-Hant';
 if(!I18N[LANG])LANG='zh-Hant';
@@ -481,6 +491,45 @@ function t(k){return (I18N[LANG]&&I18N[LANG][k])??I18N['zh-Hant'][k]??k;}
 function fmt(s,o){return s.replace(/\{(\w+)\}/g,(_,k)=>o[k]);}
 function tStatus(st){const m={'進行中':'st_active','暫停':'st_paused','已結束':'st_done'};return m[st]?t(m[st]):st;}
 function tPaid(p){const m={'已繳清':'paid_full','待繳費':'paid_pending','部分繳費':'paid_part'};return m[p]?t(m[p]):p;}
+
+/* ---------- 課程日程與提醒 ---------- */
+const LOCALES={'zh-Hant':'zh-TW','zh-Hans':'zh-CN','en':'en-US','vi':'vi-VN'};
+function lessonDates(s){
+  if(!s.firstDate||!(Number(s.total)>0))return[];
+  const base=new Date(s.firstDate+'T'+(s.classTime||'00:00'));
+  if(isNaN(base.getTime()))return[];
+  const out=[];
+  for(let i=0;i<Number(s.total);i++)out.push(new Date(base.getTime()+i*7*86400000));
+  return out;
+}
+function nextLesson(s){const now=Date.now();return lessonDates(s).find(d=>d.getTime()>now)||null;}
+function fmtDate(d){return d.toLocaleString(LOCALES[LANG]||'zh-TW',{year:'numeric',month:'numeric',day:'numeric',weekday:'short',hour:'2-digit',minute:'2-digit'});}
+let notifTimer=null;
+function startReminder(){
+  if(window.Notification&&Notification.permission==='default'){try{Notification.requestPermission();}catch(e){}}
+  if(notifTimer)clearInterval(notifTimer);
+  notifTimer=setInterval(checkReminders,60000);
+  checkReminders();
+}
+function checkReminders(){
+  const role=sessionStorage.getItem('qna_role');if(!role)return;
+  const now=Date.now();
+  const list=role==='student'?students.filter(x=>x.id===sessionStorage.getItem('qna_sid')):students;
+  list.forEach(s=>{
+    if(s.status!=='進行中')return;
+    const n=nextLesson(s);if(!n)return;
+    const diff=n.getTime()-now;
+    if(diff>0&&diff<=3600000){
+      const key='qna_ntf_'+s.id+'_'+n.getTime();
+      if(sessionStorage.getItem(key))return;
+      sessionStorage.setItem(key,'1');
+      const m=Math.max(1,Math.round(diff/60000));
+      const msg=role==='student'?fmt(t('remindStu'),{m}):fmt(t('remindTea'),{n:s.name,m});
+      toast(msg);
+      if(window.Notification&&Notification.permission==='granted'){try{new Notification('QNA Chinese',{body:msg});}catch(e){}}
+    }
+  });
+}
 function setLang(l){LANG=l;localStorage.setItem('qna_lang',l);applyLang();}
 function applyLang(){
   document.documentElement.lang=LANG;
@@ -534,6 +583,7 @@ function card(s){
   const r=remain(s),tot=Number(s.total)||0,used=Number(s.used)||0;
   const pct=tot?Math.min(100,used/tot*100):0;
   const low=tot>0&&r<=2&&s.status==='進行中';
+  const nl=s.status==='進行中'?nextLesson(s):null;
   const files=(s.files||[]).filter(f=>f.url||f.name).map(f=>f.url?`<a href="${esc(f.url)}" target="_blank">${esc(f.name||'—')}</a>`:esc(f.name)).join('、');
   return `<div class="card">
     <div class="top"><div class="who"><div class="avatar">${esc((s.name||'?').trim().charAt(0).toUpperCase())}</div><div><h3>${esc(s.name)}</h3><div class="flag">${esc(s.nationality||'—')}${s.gender?'｜'+esc(s.gender):''}</div></div></div>
@@ -543,6 +593,7 @@ function card(s){
       ${s.level?`<div class="r"><span class="k">${esc(t('level'))}</span><span class="v">${esc(s.level)}</span></div>`:''}
       ${s.outputLang?`<div class="r"><span class="k">${esc(t('outputLang'))}</span><span class="v">${esc(s.outputLang)}</span></div>`:''}
       ${s.schedule?`<div class="r"><span class="k">${esc(t('schedule'))}</span><span class="v">${esc(s.schedule)}${s.tz?'（'+esc(s.tz)+'）':''}</span></div>`:''}
+      ${nl?`<div class="r"><span class="k">${esc(t('nextLesson'))}</span><span class="v" style="color:var(--primary);font-weight:bold">${esc(fmtDate(nl))}</span></div>`:''}
       ${s.googleLink?`<div class="r"><span class="k">Google</span><span class="v"><a href="${esc(s.googleLink)}" target="_blank">${esc(t('openLink'))}</a></span></div>`:''}
       ${files?`<div class="r"><span class="k">${esc(t('materials'))}</span><span class="v">${files}</span></div>`:''}
       ${s.notes?`<div class="r"><span class="k">${esc(t('notes'))}</span><span class="v">${esc(s.notes)}</span></div>`:''}
@@ -576,6 +627,7 @@ function openModal(id){
   fLevel.value=s.level||'';fOutput.value=s.outputLang||'';
   fTotal.value=s.total??'';fUsed.value=s.used??'';fStat.value=s.status||'進行中';
   fSchedule.value=s.schedule||'';fTz.value=s.tz||'';
+  fFirstDate.value=s.firstDate||'';fClassTime.value=s.classTime||'';
   fPaid.value=s.paid||'已繳清';fNotes.value=s.notes||'';
   document.getElementById('fileList').innerHTML='';
   (s.files&&s.files.length?s.files:[{}]).forEach(addFileRow);
@@ -602,6 +654,7 @@ function save(){
     googleLink:fGoogle.value.trim(),level:fLevel.value.trim(),outputLang:fOutput.value.trim(),
     total:Number(fTotal.value)||0,used:Number(fUsed.value)||0,status:fStat.value,
     schedule:fSchedule.value.trim(),tz:fTz.value.trim(),paid:fPaid.value,notes:fNotes.value.trim(),
+    firstDate:fFirstDate.value,classTime:fClassTime.value,
     files,payments
   };
   if(editId){
@@ -725,12 +778,14 @@ function enterTeacher(){
   document.body.classList.remove('locked','student-mode');
   document.getElementById('loginScreen').style.display='none';
   render();
+  startReminder();
 }
 function enterStudent(s){
   document.body.classList.remove('locked');
   document.body.classList.add('student-mode');
   document.getElementById('loginScreen').style.display='none';
   renderStudent(s);
+  startReminder();
 }
 function logout(){
   sessionStorage.removeItem('qna_role');sessionStorage.removeItem('qna_sid');
@@ -757,6 +812,8 @@ function renderStudent(s){
   const pct=tot?Math.min(100,used/tot*100):0;
   const files=(s.files||[]).filter(f=>f.url||f.name);
   const pays=(s.payments||[]);
+  const dates=lessonDates(s);
+  const nl=s.status==='進行中'?nextLesson(s):null;
   document.getElementById('studentMain').innerHTML=`
   <div class="sv-hello">
     <div><h2>${esc(fmt(t('welcome'),{n:s.name}))}</h2>
@@ -770,9 +827,15 @@ function renderStudent(s){
   <div class="sv-sec"><h3>${esc(t('svInfo'))}</h3>
     <div class="rows">
       ${s.schedule?`<div class="r"><span class="k">${esc(t('schedule'))}</span><span class="v">${esc(s.schedule)}${s.tz?'（'+esc(s.tz)+'）':''}</span></div>`:''}
+      ${tot?`<div class="r"><span class="k">${esc(t('totalLessons'))}</span><span class="v">${used} / ${tot}</span></div>`:''}
+      ${nl?`<div class="r"><span class="k">${esc(t('nextLesson'))}</span><span class="v" style="color:var(--primary);font-weight:bold">${esc(fmtDate(nl))}</span></div>`:''}
       ${s.googleLink?`<div class="r"><span class="k">Google</span><span class="v"><a href="${esc(s.googleLink)}" target="_blank">${esc(t('openLink'))}</a></span></div>`:''}
-      ${!s.schedule&&!s.googleLink?`<div class="r"><span class="v" style="color:var(--muted)">${esc(t('svNoData'))}</span></div>`:''}
+      ${!s.schedule&&!s.googleLink&&!tot?`<div class="r"><span class="v" style="color:var(--muted)">${esc(t('svNoData'))}</span></div>`:''}
     </div></div>
+  ${dates.length?`<div class="sv-sec"><h3>${esc(t('svSchedule'))}</h3>
+    <table class="pay-table"><tr><th></th><th>${esc(t('payDate'))}</th><th>${esc(t('statusLabel'))}</th></tr>
+    ${dates.map((d,i)=>`<tr><td>${esc(fmt(t('lessonN'),{i:i+1}))}</td><td>${esc(fmtDate(d))}</td><td>${i<used?`<span class="badge done">${esc(t('doneL'))}</span>`:`<span class="badge active">${esc(t('upcomingL'))}</span>`}</td></tr>`).join('')}
+    </table></div>`:''}
   <div class="sv-sec"><h3>${esc(t('svMaterials'))}</h3>
     ${files.length?`<div class="rows">${files.map(f=>`<div class="r"><span class="v">📄 ${f.url?`<a href="${esc(f.url)}" target="_blank">${esc(f.name||'—')}</a>`:esc(f.name)}</span></div>`).join('')}</div>`:`<div style="color:var(--muted);font-size:.86rem">${esc(t('svNoMaterials'))}</div>`}
   </div>
