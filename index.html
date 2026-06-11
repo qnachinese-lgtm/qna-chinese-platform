@@ -591,8 +591,8 @@ function refreshView(){
     if(s)renderStudent(s);else if(cloudLoaded)logout();
   }else if(!document.body.classList.contains('locked')){render();}
 }
-function cloudSaveStudent(s){return db.collection('students').doc(s.id).set(s);}
-function cloudDeleteStudent(id){return db.collection('students').doc(id).delete();}
+function cloudSaveStudent(s){return db.collection('students').doc(s.id).set(s).catch(e=>{alert('⚠ 無法寫入雲端資料庫（請檢查 Firestore 規則）：\n'+e.message);});}
+function cloudDeleteStudent(id){return db.collection('students').doc(id).delete().catch(e=>{alert('⚠ 無法寫入雲端資料庫（請檢查 Firestore 規則）：\n'+e.message);});}
 
 /* ---------- render ---------- */
 function render(){
@@ -865,9 +865,9 @@ function changeAdminPw(){
   if(old!==adminPw()){alert(t('pwWrong'));return;}
   const nw=prompt(t('pwPromptNew'));
   if(!nw||nw.length<4){alert(t('pwTooShort'));return;}
-  ADMINPW=nw;
-  db.collection('settings').doc('config').set({adminPw:nw});
-  toast(t('pwUpdated'));
+  db.collection('settings').doc('config').set({adminPw:nw})
+    .then(()=>{ADMINPW=nw;toast(t('pwUpdated'));})
+    .catch(e=>{alert('⚠ 密碼未能存到雲端（請檢查 Firestore 規則）：\n'+e.message);});
 }
 
 /* ---------- 學生視圖（唯讀） ---------- */
