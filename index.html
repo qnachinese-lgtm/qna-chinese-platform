@@ -296,7 +296,7 @@ body.student-mode .toolbar .teacher-only{display:none;}
         <div class="field"><label data-i18n="gender">性別</label><select id="fGender"><option value="">—</option><option value="女" data-i18n="female">女</option><option value="男" data-i18n="male">男</option><option value="其他" data-i18n="other">其他</option></select></div>
         <div class="field"><label data-i18n="email">信箱</label><input id="fEmail" type="email"></div>
         <div class="field"><label data-i18n="stuPw">學生登入密碼（學生用名稱＋此密碼登入）</label><input id="fPw"></div>
-        <div class="field full"><label data-i18n="googleLink">Google 連結（雲端硬碟 / Meet / 文件）</label><input id="fGoogle" placeholder="https://…"></div>
+        <div class="field full"><label data-i18n="googleLink">Google Meet 上課連結</label><input id="fGoogle" placeholder="https://meet.google.com/…"></div>
       </div>
     </div>
 
@@ -389,7 +389,7 @@ const I18N={
  addTitle:'新增學習者',editTitle:'編輯學習者：{n}',
  secBasic:'基 本 資 料',secLang:'語 言 設 定',secCourse:'課 程 安 排',secFiles:'上 課 資 料 檔 案',secPay:'繳 費 紀 錄',secNotes:'備 註',
  name:'姓名',nationality:'國籍',gender:'性別',female:'女',male:'男',other:'其他',
- stuPw:'學生登入密碼（學生用名稱＋此密碼登入）',googleLink:'Google 連結（雲端硬碟 / Meet / 文件）',
+ stuPw:'學生登入密碼（學生用名稱＋此密碼登入）',googleLink:'Google Meet 上課連結',
  levelLabel:'語言門檻（目前中文程度）',outputLabel:'希望達到的中文程度',
  totalLessons:'總堂數',usedLessons:'已上堂數',statusLabel:'狀態',scheduleLabel:'上課時間',tzLabel:'學生時區',paidLabel:'繳費狀態',
  fileName:'資料名稱',fileUrl:'連結 https://…',addFileRow:'＋ 新增資料連結',amount:'金額',payNote:'說明（例：10堂方案）',addPayRow:'＋ 新增繳費紀錄',
@@ -425,7 +425,7 @@ const I18N={
  addTitle:'新增学习者',editTitle:'编辑学习者：{n}',
  secBasic:'基 本 资 料',secLang:'语 言 设 置',secCourse:'课 程 安 排',secFiles:'上 课 资 料 文 件',secPay:'缴 费 记 录',secNotes:'备 注',
  name:'姓名',nationality:'国籍',gender:'性别',female:'女',male:'男',other:'其他',
- stuPw:'学生登录密码（学生用名称＋此密码登录）',googleLink:'Google 链接（云端硬盘 / Meet / 文档）',
+ stuPw:'学生登录密码（学生用名称＋此密码登录）',googleLink:'Google Meet 上课链接',
  levelLabel:'语言门槛（目前中文程度）',outputLabel:'希望达到的中文程度',
  totalLessons:'总课时',usedLessons:'已上课时',statusLabel:'状态',scheduleLabel:'上课时间',tzLabel:'学生时区',paidLabel:'缴费状态',
  fileName:'资料名称',fileUrl:'链接 https://…',addFileRow:'＋ 新增资料链接',amount:'金额',payNote:'说明（例：10节方案）',addPayRow:'＋ 新增缴费记录',
@@ -461,7 +461,7 @@ const I18N={
  addTitle:'Add Learner',editTitle:'Edit Learner: {n}',
  secBasic:'BASIC INFO',secLang:'LANGUAGE',secCourse:'COURSE',secFiles:'CLASS MATERIALS',secPay:'PAYMENTS',secNotes:'NOTES',
  name:'Name',nationality:'Nationality',gender:'Gender',female:'Female',male:'Male',other:'Other',
- stuPw:'Student login password (login with name + this password)',googleLink:'Google link (Drive / Meet / Docs)',
+ stuPw:'Student login password (login with name + this password)',googleLink:'Google Meet class link',
  levelLabel:'Current Chinese level',outputLabel:'Target Chinese level (goal)',
  totalLessons:'Total lessons',usedLessons:'Lessons taken',statusLabel:'Status',scheduleLabel:'Class time',tzLabel:'Student time zone',paidLabel:'Payment status',
  fileName:'Material name',fileUrl:'Link https://…',addFileRow:'＋ Add material link',amount:'Amount',payNote:'Note (e.g. 10-lesson pack)',addPayRow:'＋ Add payment record',
@@ -497,7 +497,7 @@ const I18N={
  addTitle:'Thêm học viên',editTitle:'Chỉnh sửa: {n}',
  secBasic:'THÔNG TIN CƠ BẢN',secLang:'NGÔN NGỮ',secCourse:'KHÓA HỌC',secFiles:'TÀI LIỆU HỌC TẬP',secPay:'THANH TOÁN',secNotes:'GHI CHÚ',
  name:'Họ tên',nationality:'Quốc tịch',gender:'Giới tính',female:'Nữ',male:'Nam',other:'Khác',
- stuPw:'Mật khẩu đăng nhập của học viên (đăng nhập bằng tên + mật khẩu này)',googleLink:'Liên kết Google (Drive / Meet / Docs)',
+ stuPw:'Mật khẩu đăng nhập của học viên (đăng nhập bằng tên + mật khẩu này)',googleLink:'Liên kết Google Meet',
  levelLabel:'Trình độ tiếng Trung hiện tại',outputLabel:'Trình độ tiếng Trung mong muốn đạt được',
  totalLessons:'Tổng số buổi',usedLessons:'Số buổi đã học',statusLabel:'Trạng thái',scheduleLabel:'Lịch học',tzLabel:'Múi giờ của học viên',paidLabel:'Trạng thái thanh toán',
  fileName:'Tên tài liệu',fileUrl:'Liên kết https://…',addFileRow:'＋ Thêm liên kết tài liệu',amount:'Số tiền',payNote:'Ghi chú (VD: gói 10 buổi)',addPayRow:'＋ Thêm bản ghi thanh toán',
