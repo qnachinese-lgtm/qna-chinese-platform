@@ -225,6 +225,7 @@ body.student-mode .toolbar .teacher-only{display:none;}
     <!-- 老師登入 -->
     <div id="vAdmin" style="display:none">
       <div class="view-title" data-i18n="adminLink">教師登入</div>
+      <div class="login-hint" id="adminSetupHint" style="display:none;text-align:left;margin:0 0 14px" data-i18n="firstPwHint">首次使用：你現在輸入的密碼將成為管理密碼，所有裝置通用</div>
       <div class="lfield pw"><input type="password" id="lAdminPw" data-i18n-ph="phAdminPw" placeholder="老師管理密碼" onkeydown="if(event.key==='Enter')teacherLogin()"><button class="show-pw" onclick="togglePw('lAdminPw',this)">顯示</button></div>
       <div class="login-err" id="errT"></div>
       <button class="btn-login" onclick="teacherLogin()" data-i18n="btnTeacher">老師登入 →</button>
@@ -370,7 +371,7 @@ const FIREBASE_CONFIG={
   appId:"1:645044163415:web:c33d1a22422de3083b6412"
 };
 
-let students=[], editId=null, db=null, ADMINPW='qna1234', cloudLoaded=false;
+let students=[], editId=null, db=null, ADMINPW=null, cloudLoaded=false, settingsLoaded=false, settingsError=false;
 function cloudReady(){return typeof firebase!=='undefined'&&FIREBASE_CONFIG&&!!FIREBASE_CONFIG.apiKey;}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
@@ -405,6 +406,7 @@ const I18N={
  errEmail:'請輸入有效的 Email 信箱',errPwShort:'密碼至少需要 4 個字元',errDup:'此名稱或信箱已有帳號，請直接登入',
  forgotMsg:'請聯絡老師重設密碼：\nqnachinese@gmail.com',
  loadingData:'資料載入中，請稍候再試',noCloud:'尚未連接雲端資料庫，請先完成 Firebase 設定',
+ rulesErr:'資料庫權限尚未開通，請先到 Firebase 發布規則',firstPwHint:'首次使用：你現在輸入的密碼將成為管理密碼，所有裝置通用',
  welcome:'{n}，歡迎回來！',svProgress:'課 程 進 度',svInfo:'上 課 資 訊',svNoData:'尚無資料',svMaterials:'上 課 資 料',svNoMaterials:'老師尚未提供上課資料',
  svPay:'繳 費 紀 錄',payDate:'日期',payAmount:'金額',payNoteTh:'說明',svNoPay:'尚無繳費紀錄',outputPrefix:'目標程度：',regNote:'學生自行註冊',
  firstDateL:'第一堂課日期',classTimeL:'上課時刻',nextLesson:'下一堂課',svSchedule:'上 課 日 程',lessonN:'第 {i} 堂',doneL:'已完成',upcomingL:'未上課',
@@ -441,6 +443,7 @@ const I18N={
  errEmail:'请输入有效的 Email 邮箱',errPwShort:'密码至少需要 4 个字符',errDup:'此名称或邮箱已有账号，请直接登录',
  forgotMsg:'请联系老师重置密码：\nqnachinese@gmail.com',
  loadingData:'数据加载中，请稍候再试',noCloud:'尚未连接云端数据库，请先完成 Firebase 设置',
+ rulesErr:'数据库权限尚未开通，请先到 Firebase 发布规则',firstPwHint:'首次使用：你现在输入的密码将成为管理密码，所有设备通用',
  welcome:'{n}，欢迎回来！',svProgress:'课 程 进 度',svInfo:'上 课 信 息',svNoData:'暂无数据',svMaterials:'上 课 资 料',svNoMaterials:'老师尚未提供上课资料',
  svPay:'缴 费 记 录',payDate:'日期',payAmount:'金额',payNoteTh:'说明',svNoPay:'暂无缴费记录',outputPrefix:'目标程度：',regNote:'学生自行注册',
  firstDateL:'第一节课日期',classTimeL:'上课时刻',nextLesson:'下一节课',svSchedule:'上 课 日 程',lessonN:'第 {i} 节',doneL:'已完成',upcomingL:'未上课',
@@ -477,6 +480,7 @@ const I18N={
  errEmail:'Please enter a valid email',errPwShort:'Password needs at least 4 characters',errDup:'This name or email already has an account — please log in',
  forgotMsg:'Please contact your teacher to reset your password:\nqnachinese@gmail.com',
  loadingData:'Loading data — please try again in a moment',noCloud:'Cloud database not connected — please finish the Firebase setup first',
+ rulesErr:'Database permissions not set up yet — please publish the Firestore rules first',firstPwHint:'First time: the password you enter now will become the admin password for all devices',
  welcome:'Welcome back, {n}!',svProgress:'COURSE PROGRESS',svInfo:'CLASS INFO',svNoData:'No data yet',svMaterials:'MATERIALS',svNoMaterials:'No materials from your teacher yet',
  svPay:'PAYMENTS',payDate:'Date',payAmount:'Amount',payNoteTh:'Note',svNoPay:'No payment records yet',outputPrefix:'Target level: ',regNote:'Self-registered',
  firstDateL:'First lesson date',classTimeL:'Class start time',nextLesson:'Next lesson',svSchedule:'LESSON SCHEDULE',lessonN:'Lesson {i}',doneL:'Done',upcomingL:'Upcoming',
@@ -513,6 +517,7 @@ const I18N={
  errEmail:'Vui lòng nhập email hợp lệ',errPwShort:'Mật khẩu cần ít nhất 4 ký tự',errDup:'Tên hoặc email này đã có tài khoản — vui lòng đăng nhập',
  forgotMsg:'Vui lòng liên hệ giáo viên để đặt lại mật khẩu:\nqnachinese@gmail.com',
  loadingData:'Đang tải dữ liệu — vui lòng thử lại sau giây lát',noCloud:'Chưa kết nối cơ sở dữ liệu đám mây — vui lòng hoàn tất cài đặt Firebase',
+ rulesErr:'Chưa mở quyền cơ sở dữ liệu — vui lòng phát hành quy tắc Firestore trước',firstPwHint:'Lần đầu sử dụng: mật khẩu bạn nhập bây giờ sẽ trở thành mật khẩu quản trị cho mọi thiết bị',
  welcome:'{n}, chào mừng trở lại!',svProgress:'TIẾN ĐỘ KHÓA HỌC',svInfo:'THÔNG TIN LỚP HỌC',svNoData:'Chưa có dữ liệu',svMaterials:'TÀI LIỆU HỌC TẬP',svNoMaterials:'Giáo viên chưa cung cấp tài liệu',
  svPay:'LỊCH SỬ THANH TOÁN',payDate:'Ngày',payAmount:'Số tiền',payNoteTh:'Ghi chú',svNoPay:'Chưa có bản ghi thanh toán',outputPrefix:'Mục tiêu: ',regNote:'Học viên tự đăng ký',
  firstDateL:'Ngày học buổi đầu tiên',classTimeL:'Giờ bắt đầu học',nextLesson:'Buổi học tiếp theo',svSchedule:'LỊCH HỌC',lessonN:'Buổi {i}',doneL:'Đã hoàn thành',upcomingL:'Sắp tới',
@@ -771,6 +776,7 @@ function showLoginView(v){
   document.getElementById('adminLink').style.display=tabsOn?'':'none';
   document.getElementById('tabLogin').classList.toggle('on',v==='login');
   document.getElementById('tabSignup').classList.toggle('on',v==='signup');
+  if(v==='admin')document.getElementById('adminSetupHint').style.display=(!ADMINPW&&settingsLoaded&&!settingsError)?'':'none';
 }
 function togglePw(id,btn){
   const i=document.getElementById(id);
@@ -795,10 +801,22 @@ function sendResetReq(){
   showLoginView('login');
 }
 function teacherLogin(){
-  if(!cloudReady()){document.getElementById('errT').textContent=t('noCloud');return;}
-  if(document.getElementById('lAdminPw').value===adminPw()){
+  const err=document.getElementById('errT');
+  const v=document.getElementById('lAdminPw').value;
+  if(!cloudReady()){err.textContent=t('noCloud');return;}
+  if(settingsError){err.textContent=t('rulesErr');return;}
+  if(!settingsLoaded){err.textContent=t('loadingData');return;}
+  if(!ADMINPW){
+    // 首次使用：此密碼即成為永久管理密碼
+    if(!v||v.length<4){err.textContent=t('errPwShort');return;}
+    db.collection('settings').doc('config').set({adminPw:v})
+      .then(()=>{ADMINPW=v;sessionStorage.setItem('qna_role','teacher');enterTeacher();toast(t('pwUpdated'));})
+      .catch(e=>{err.textContent=t('rulesErr');});
+    return;
+  }
+  if(v===ADMINPW){
     sessionStorage.setItem('qna_role','teacher');enterTeacher();
-  }else document.getElementById('errT').textContent=t('pwWrong');
+  }else err.textContent=t('pwWrong');
 }
 function studentLogin(){
   const nm=document.getElementById('lStuName').value.trim();
@@ -921,8 +939,9 @@ function renderStudent(s){
   firebase.initializeApp(FIREBASE_CONFIG);
   db=firebase.firestore();
   db.collection('settings').doc('config').onSnapshot(d=>{
-    if(d.exists&&d.data().adminPw)ADMINPW=d.data().adminPw;
-  });
+    settingsLoaded=true;settingsError=false;
+    ADMINPW=(d.exists&&d.data().adminPw)?d.data().adminPw:null;
+  },err=>{settingsLoaded=true;settingsError=true;console.error('settings read error',err);});
   db.collection('students').onSnapshot(snap=>{
     students=snap.docs.map(d=>d.data());
     if(!cloudLoaded){
