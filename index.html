@@ -91,8 +91,9 @@ main{max-width:1180px;margin:0 auto;padding:24px 20px 60px;}
 .field textarea{resize:vertical;min-height:70px;}
 .sub-list{display:grid;gap:8px;}
 .sub-row{display:grid;grid-template-columns:1fr 1.4fr 34px;gap:8px;}
-.sub-row.pay{grid-template-columns:.9fr .7fr 1.2fr 34px;}
+.sub-row.pay{grid-template-columns:.95fr .65fr .75fr 1fr 34px;}
 .sub-row input{padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:.85rem;font-family:inherit;}
+.sub-row select{padding:8px 6px;border:1px solid var(--border);border-radius:8px;font-size:.85rem;font-family:inherit;background:#fff;}
 .btn-x{background:#f1f5fa;color:var(--muted);border-radius:8px;font-size:1rem;padding:0;}
 .btn-x:hover{background:#fdecea;color:var(--bad);}
 .btn-add-row{background:none;border:1px dashed var(--border);color:var(--muted);width:100%;padding:7px;font-size:.82rem;border-radius:8px;}
@@ -409,7 +410,8 @@ const I18N={
  firstDateL:'第一堂課日期',classTimeL:'上課時刻',nextLesson:'下一堂課',svSchedule:'上 課 日 程',lessonN:'第 {i} 堂',doneL:'已完成',upcomingL:'未上課',
  remindStu:'提醒：你的課程將在 {m} 分鐘後開始！',remindTea:'提醒：{n} 的課程將在 {m} 分鐘後開始',
  forgotDesc:'輸入你的學習者名稱或 Email，送出後老師會協助你重設密碼。',phNameOrEmail:'學習者名稱或 Email',sendReq:'送出申請 →',
- reqSent:'已通知老師，請等候老師與你聯繫',reqNotFound:'找不到這個名稱或 Email',resetBanner:'{c} 位學習者申請重設密碼：{names}',resetTag:'申請重設密碼'
+ reqSent:'已通知老師，請等候老師與你聯繫',reqNotFound:'找不到這個名稱或 Email',resetBanner:'{c} 位學習者申請重設密碼：{names}',resetTag:'申請重設密碼',
+ curTWD:'臺幣 (TWD)',curVND:'越南盾 (VND)'
 },
 'zh-Hans':{
  appTitle:'学习者管理',addStudent:'＋ 新增学习者',exportBackup:'导出备份',importBackup:'导入备份',exportCsv:'导出 CSV',adminPwBtn:'管理密码',logoutBtn:'退出登录',
@@ -444,7 +446,8 @@ const I18N={
  firstDateL:'第一节课日期',classTimeL:'上课时刻',nextLesson:'下一节课',svSchedule:'上 课 日 程',lessonN:'第 {i} 节',doneL:'已完成',upcomingL:'未上课',
  remindStu:'提醒：你的课程将在 {m} 分钟后开始！',remindTea:'提醒：{n} 的课程将在 {m} 分钟后开始',
  forgotDesc:'输入你的学习者名称或 Email，提交后老师会协助你重置密码。',phNameOrEmail:'学习者名称或 Email',sendReq:'提交申请 →',
- reqSent:'已通知老师，请等候老师与你联系',reqNotFound:'找不到这个名称或 Email',resetBanner:'{c} 位学习者申请重置密码：{names}',resetTag:'申请重置密码'
+ reqSent:'已通知老师，请等候老师与你联系',reqNotFound:'找不到这个名称或 Email',resetBanner:'{c} 位学习者申请重置密码：{names}',resetTag:'申请重置密码',
+ curTWD:'新台币 (TWD)',curVND:'越南盾 (VND)'
 },
 'en':{
  appTitle:'Learner Management',addStudent:'＋ Add Learner',exportBackup:'Export Backup',importBackup:'Import Backup',exportCsv:'Export CSV',adminPwBtn:'Admin Password',logoutBtn:'Log out',
@@ -479,7 +482,8 @@ const I18N={
  firstDateL:'First lesson date',classTimeL:'Class start time',nextLesson:'Next lesson',svSchedule:'LESSON SCHEDULE',lessonN:'Lesson {i}',doneL:'Done',upcomingL:'Upcoming',
  remindStu:'Reminder: your lesson starts in {m} minutes!',remindTea:'Reminder: {n} has a lesson in {m} minutes',
  forgotDesc:'Enter your learner name or email and your teacher will help you reset your password.',phNameOrEmail:'Learner name or email',sendReq:'Send request →',
- reqSent:'Your teacher has been notified — please wait for them to contact you',reqNotFound:'Name or email not found',resetBanner:'{c} learner(s) requested a password reset: {names}',resetTag:'Password reset requested'
+ reqSent:'Your teacher has been notified — please wait for them to contact you',reqNotFound:'Name or email not found',resetBanner:'{c} learner(s) requested a password reset: {names}',resetTag:'Password reset requested',
+ curTWD:'TWD (NT$)',curVND:'VND (₫)'
 },
 'vi':{
  appTitle:'Quản lý học viên',addStudent:'＋ Thêm học viên',exportBackup:'Xuất bản sao lưu',importBackup:'Nhập bản sao lưu',exportCsv:'Xuất CSV',adminPwBtn:'Mật khẩu quản trị',logoutBtn:'Đăng xuất',
@@ -514,7 +518,8 @@ const I18N={
  firstDateL:'Ngày học buổi đầu tiên',classTimeL:'Giờ bắt đầu học',nextLesson:'Buổi học tiếp theo',svSchedule:'LỊCH HỌC',lessonN:'Buổi {i}',doneL:'Đã hoàn thành',upcomingL:'Sắp tới',
  remindStu:'Nhắc nhở: buổi học của bạn bắt đầu sau {m} phút!',remindTea:'Nhắc nhở: buổi học của {n} bắt đầu sau {m} phút',
  forgotDesc:'Nhập tên học viên hoặc email, giáo viên sẽ giúp bạn đặt lại mật khẩu.',phNameOrEmail:'Tên học viên hoặc email',sendReq:'Gửi yêu cầu →',
- reqSent:'Đã thông báo cho giáo viên — vui lòng chờ giáo viên liên hệ',reqNotFound:'Không tìm thấy tên hoặc email',resetBanner:'{c} học viên yêu cầu đặt lại mật khẩu: {names}',resetTag:'Yêu cầu đặt lại mật khẩu'
+ reqSent:'Đã thông báo cho giáo viên — vui lòng chờ giáo viên liên hệ',reqNotFound:'Không tìm thấy tên hoặc email',resetBanner:'{c} học viên yêu cầu đặt lại mật khẩu: {names}',resetTag:'Yêu cầu đặt lại mật khẩu',
+ curTWD:'Đài tệ (TWD)',curVND:'Việt Nam đồng (VND)'
 }};
 let LANG=localStorage.getItem('qna_lang')||'zh-Hant';
 if(!I18N[LANG])LANG='zh-Hant';
@@ -522,6 +527,13 @@ function t(k){return (I18N[LANG]&&I18N[LANG][k])??I18N['zh-Hant'][k]??k;}
 function fmt(s,o){return s.replace(/\{(\w+)\}/g,(_,k)=>o[k]);}
 function tStatus(st){const m={'進行中':'st_active','暫停':'st_paused','已結束':'st_done'};return m[st]?t(m[st]):st;}
 function tPaid(p){const m={'已繳清':'paid_full','待繳費':'paid_pending','部分繳費':'paid_part'};return m[p]?t(m[p]):p;}
+const CURSYM={TWD:'NT$',VND:'₫'};
+function fmtMoney(p){
+  if(!p.amount)return'—';
+  const n=Number(String(p.amount).replace(/[,\s]/g,''));
+  const v=isNaN(n)?p.amount:n.toLocaleString();
+  return (CURSYM[p.cur]||'')+v;
+}
 
 /* ---------- 課程日程與提醒 ---------- */
 const LOCALES={'zh-Hant':'zh-TW','zh-Hans':'zh-CN','en':'en-US','vi':'vi-VN'};
@@ -649,7 +661,7 @@ function addFileRow(f={}){
 }
 function addPayRow(p={}){
   const d=document.createElement('div');d.className='sub-row pay';
-  d.innerHTML=`<input type="date" value="${esc(p.date||'')}"><input placeholder="${esc(t('amount'))}" value="${esc(p.amount||'')}"><input placeholder="${esc(t('payNote'))}" value="${esc(p.note||'')}"><button class="btn-x" onclick="this.parentNode.remove()">✕</button>`;
+  d.innerHTML=`<input type="date" value="${esc(p.date||'')}"><input placeholder="${esc(t('amount'))}" value="${esc(p.amount||'')}"><select><option value="TWD"${p.cur!=='VND'?' selected':''}>${esc(t('curTWD'))}</option><option value="VND"${p.cur==='VND'?' selected':''}>${esc(t('curVND'))}</option></select><input placeholder="${esc(t('payNote'))}" value="${esc(p.note||'')}"><button class="btn-x" onclick="this.parentNode.remove()">✕</button>`;
   document.getElementById('payList').appendChild(d);
 }
 function openModal(id){
@@ -681,7 +693,9 @@ function save(){
     const[i1,i2]=r.querySelectorAll('input');return{name:i1.value.trim(),url:i2.value.trim()};
   }).filter(f=>f.name||f.url);
   const payments=[...document.querySelectorAll('#payList .sub-row')].map(r=>{
-    const[i1,i2,i3]=r.querySelectorAll('input');return{date:i1.value,amount:i2.value.trim(),note:i3.value.trim()};
+    const[i1,i2,i3]=r.querySelectorAll('input');
+    const cur=(r.querySelector('select')||{}).value||'TWD';
+    return{date:i1.value,amount:i2.value.trim(),cur,note:i3.value.trim()};
   }).filter(p=>p.date||p.amount||p.note);
   const data={
     name,nationality:fNation.value.trim(),gender:fGender.value,email:fEmail.value.trim(),pw:fPw.value.trim(),
@@ -738,7 +752,7 @@ function exportCSV(){
     s.name,s.nationality,s.gender,s.email,s.level,s.outputLang,s.googleLink,
     (s.files||[]).map(f=>f.name+(f.url?' '+f.url:'')).join('；'),
     s.total,s.used,remain(s),s.status,s.schedule,s.tz,s.paid,
-    (s.payments||[]).map(p=>[p.date,p.amount,p.note].filter(Boolean).join(' ')).join('；'),
+    (s.payments||[]).map(p=>[p.date,p.amount?(p.amount+' '+(p.cur||'TWD')):'',p.note].filter(Boolean).join(' ')).join('；'),
     s.notes
   ].map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(','))).join('\r\n');
   dl('學習者名單_'+new Date().toISOString().slice(0,10)+'.csv','﻿'+csv,'text/csv;charset=utf-8');
@@ -892,7 +906,7 @@ function renderStudent(s){
   <div class="sv-sec"><h3>${esc(t('svPay'))}</h3>
     <div style="margin-bottom:10px"><span class="badge ${s.paid==='已繳清'?'active':'paused'}">${esc(tPaid(s.paid||'待繳費'))}</span></div>
     ${pays.length?`<table class="pay-table"><tr><th>${esc(t('payDate'))}</th><th>${esc(t('payAmount'))}</th><th>${esc(t('payNoteTh'))}</th></tr>
-      ${pays.map(p=>`<tr><td>${esc(p.date||'—')}</td><td>${esc(p.amount||'—')}</td><td>${esc(p.note||'')}</td></tr>`).join('')}</table>`:`<div style="color:var(--muted);font-size:.86rem">${esc(t('svNoPay'))}</div>`}
+      ${pays.map(p=>`<tr><td>${esc(p.date||'—')}</td><td>${esc(fmtMoney(p))}</td><td>${esc(p.note||'')}</td></tr>`).join('')}</table>`:`<div style="color:var(--muted);font-size:.86rem">${esc(t('svNoPay'))}</div>`}
   </div>`;
 }
 
